@@ -1,0 +1,1466 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Level 0 Practice Hub</title>
+<style>
+:root{--bg:#faf6ee;--ink:#2b2623;--muted:#6f655b;--card:#fffdf7;--sand:#eae1d1;--clay:#c4623a;--green:#3c7a4f;--blue:#3a5f8c;--red:#b3402a;--line:#d8cdb9}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1c1a18;--ink:#f1ebe1;--muted:#b3a899;--card:#262320;--sand:#332e29;--clay:#e0825a;--green:#6fbf88;--blue:#8fb3dc;--red:#ff8d75;--line:#4a433b}}
+:root[data-theme="dark"]{--bg:#1c1a18;--ink:#f1ebe1;--muted:#b3a899;--card:#262320;--sand:#332e29;--clay:#e0825a;--green:#6fbf88;--blue:#8fb3dc;--red:#ff8d75;--line:#4a433b}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:760px;margin:0 auto;padding:0 16px 80px}
+header{padding:20px 0 8px}
+h1{font-size:26px;line-height:1.2;margin:0 0 4px}
+.sub{color:var(--muted);margin:0}
+nav{display:flex;gap:8px;overflow-x:auto;padding:12px 0;position:sticky;top:0;background:var(--bg);z-index:5;border-bottom:1px solid var(--line)}
+nav button{flex:0 0 auto;min-height:44px;padding:0 16px;border-radius:22px;border:2px solid var(--ink);background:var(--card);color:var(--ink);font:600 16px system-ui;cursor:pointer}
+nav button[aria-selected="true"]{background:var(--clay);color:#fff;border-color:var(--clay)}
+section{display:none;padding-top:16px}
+section.on{display:block}
+h2{font-size:22px;margin:8px 0}
+h3{font-size:18px;margin:18px 0 6px}
+.card{background:var(--card);border:2px solid var(--line);border-radius:16px;padding:14px 16px;margin:12px 0}
+.opt{display:block;width:100%;text-align:left;min-height:48px;margin:6px 0;padding:10px 14px;border-radius:12px;border:2px solid var(--line);background:var(--bg);color:var(--ink);font:16px system-ui;cursor:pointer}
+.opt.good{border-color:var(--green);background:color-mix(in srgb,var(--green) 18%,var(--bg))}
+.opt.bad{border-color:var(--red);background:color-mix(in srgb,var(--red) 15%,var(--bg))}
+.opt:disabled{cursor:default}
+.btn{min-height:46px;padding:0 18px;border-radius:12px;border:2px solid var(--ink);background:var(--clay);color:#fff;font:700 16px system-ui;cursor:pointer;margin:6px 8px 6px 0}
+.btn.alt{background:var(--card);color:var(--ink)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.note{color:var(--muted);font-size:15px}
+.msg{padding:10px 12px;border-radius:12px;margin:8px 0;font-size:16px}
+.hint{background:color-mix(in srgb,var(--blue) 15%,var(--bg));border:1px solid var(--blue)}
+.ok{background:color-mix(in srgb,var(--green) 16%,var(--bg));border:1px solid var(--green)}
+.warn{background:color-mix(in srgb,var(--clay) 16%,var(--bg));border:1px solid var(--clay)}
+textarea,input[type=text],select{width:100%;min-height:46px;padding:10px 12px;border-radius:12px;border:2px solid var(--line);background:var(--bg);color:var(--ink);font:16px system-ui}
+textarea{min-height:96px;resize:vertical}
+table{border-collapse:collapse;width:100%;font-size:16px}
+th,td{border:1px solid var(--line);padding:4px 6px;text-align:left}
+th{background:var(--sand)}
+td input{min-height:40px;border-width:1px;padding:4px 8px;font-size:16px}
+.tw{overflow-x:auto}
+.chk{list-style:none;padding:0;margin:8px 0}
+.chk li{padding:6px 0 6px 34px;position:relative}
+.chk li::before{content:"○";position:absolute;left:6px;color:var(--muted)}
+.chk li.y::before{content:"✓";color:var(--green);font-weight:700}
+.score{font-weight:700;font-size:20px}
+.bar{height:14px;border-radius:7px;background:var(--sand);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--green)}
+.tag{display:inline-block;padding:2px 10px;border-radius:12px;background:var(--sand);font-size:14px;margin-right:6px}
+canvas{max-width:100%;height:auto;border:2px solid var(--line);border-radius:8px}
+label{font-weight:600;display:block;margin-top:12px}
+th button{background:none;border:0;font:700 16px system-ui;color:var(--ink);cursor:pointer;min-height:36px}
+.pills{display:flex;gap:8px;overflow-x:auto;padding:4px 0 10px}
+.pill{flex:0 0 auto;min-height:40px;padding:0 14px;border-radius:20px;border:2px solid var(--line);background:var(--card);color:var(--ink);font:600 15px system-ui;cursor:pointer}
+.pill.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.row3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+#xlhost{margin:10px 0;border:2px solid var(--line);border-radius:10px;overflow:hidden}
+code{background:var(--sand);padding:1px 6px;border-radius:6px;font-size:.92em}
+#saveWarn{display:none;background:#fde8e1;color:#7a2a18;border:2px solid #b3402a;border-radius:12px;padding:10px 12px;margin:10px 0}
+</style>
+</head>
+<body>
+<noscript><div style="padding:16px;margin:12px;background:#fde8e1;color:#7a2a18;border:2px solid #b3402a;border-radius:12px;font:17px system-ui"><b>This page needs JavaScript to work.</b> Your viewer has switched it off (this happens in some file previews). Download the file, then open it in Chrome or Safari, or open the hosted link in your browser.</div></noscript>
+<div class="wrap">
+<header>
+<h1>Level 0: Foundations. Practice Hub</h1>
+<p class="sub">Quiz, spreadsheet practice, client project, portfolio and certificate. Works offline on your phone.</p>
+<div id="saveWarn">Your browser is not letting this page save your progress (private mode or a preview). Use Settings, Export my progress, before you close it.</div>
+</header>
+<nav role="tablist" aria-label="Practice hub sections">
+<button role="tab" data-tab="home" aria-selected="true">Home</button>
+<button role="tab" data-tab="quiz" aria-selected="false">Quiz</button>
+<button role="tab" data-tab="review" aria-selected="false">Review</button>
+<button role="tab" data-tab="sandbox" aria-selected="false">Sandbox</button>
+<button role="tab" data-tab="project" aria-selected="false">Project</button>
+<button role="tab" data-tab="portfolio" aria-selected="false">Portfolio</button>
+<button role="tab" data-tab="cert" aria-selected="false">Certificate</button>
+<button role="tab" data-tab="ask" aria-selected="false">Ask</button>
+<button role="tab" data-tab="settings" aria-selected="false">Settings</button>
+</nav>
+<section id="home" class="on"><div id="homebody"></div></section>
+<section id="quiz">
+<h2>Quiz: 30 questions</h2>
+<p class="note">Pass mark: 80%. Answer right first time for 1 point. If you miss, you get a hint and one more try for half a point. Then the answer is shown. Options are shuffled.</p>
+<div id="qscore" class="card"></div>
+<div id="qlist"></div>
+<h2>Explain it back</h2>
+<p class="note">A concept counts as learned only when you can say it in your own words. Type your answer first. Then compare it with the model answer.</p>
+<div id="elist"></div>
+<button class="btn alt" id="qreset">Reset quiz and answers</button>
+</section>
+<section id="review"><h2>Review</h2><div id="rvbody"></div></section>
+<section id="sandbox"><h2>Sandbox: practise on a real-style spreadsheet</h2><p class="note">This sheet looks and works like Excel on purpose, so Lesson 2 feels familiar. Tap a cell to select. Type to fill it. Pinch is off; use the plus and minus at the bottom to zoom.</p><div id="sbbody"></div></section>
+<section id="project"><h2>Mini project: Mama Tunde's shop</h2><div id="proj"></div></section>
+<section id="portfolio"><h2>Portfolio entry</h2><div id="port"></div></section>
+<section id="cert"><h2>Certificate</h2><div id="certbox"></div></section>
+<section id="ask"><h2>Ask</h2><div id="askbody"></div></section>
+<section id="settings"><h2>Settings</h2><div id="setbody"></div></section>
+</div>
+<script>
+/* XLSheet: an Excel-style spreadsheet for practice. Layout, shortcuts and behaviour follow desktop Excel.
+   Honest limits: not every Excel feature exists. Tabs and buttons that are not part of the lesson are visible but marked. */
+(function (global) {
+"use strict";
+function colName(i){var s="";i++;while(i>0){var m=(i-1)%26;s=String.fromCharCode(65+m)+s;i=Math.floor((i-1)/26);}return s;}
+function colIndex(s){var n=0;for(var i=0;i<s.length;i++)n=n*26+(s.charCodeAt(i)-64);return n-1;}
+function A(c,r){return colName(c)+(r+1);}
+function P(a){var m=/^\$?([A-Z]{1,3})\$?(\d+)$/.exec(String(a).toUpperCase().trim());return m?{c:colIndex(m[1]),r:+m[2]-1}:null;}
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
+var ERR=function(e){return {e:e};};
+function isErr(v){return v&&typeof v==="object"&&v.e;}
+
+/* ---------------- formula engine ---------------- */
+var FN_SIG={SUM:"SUM(number1, [number2], ...)",AVERAGE:"AVERAGE(number1, [number2], ...)",COUNT:"COUNT(value1, [value2], ...)",COUNTA:"COUNTA(value1, [value2], ...)",MAX:"MAX(number1, [number2], ...)",MIN:"MIN(number1, [number2], ...)",
+ IF:"IF(logical_test, value_if_true, [value_if_false])",ROUND:"ROUND(number, num_digits)",TRIM:"TRIM(text)",UPPER:"UPPER(text)",LOWER:"LOWER(text)",PROPER:"PROPER(text)",LEN:"LEN(text)",LEFT:"LEFT(text, [num_chars])",RIGHT:"RIGHT(text, [num_chars])",MID:"MID(text, start_num, num_chars)",
+ CONCAT:"CONCAT(text1, [text2], ...)",CONCATENATE:"CONCATENATE(text1, [text2], ...)",COUNTIF:"COUNTIF(range, criteria)",SUMIF:"SUMIF(range, criteria, [sum_range])",VALUE:"VALUE(text)",ISNUMBER:"ISNUMBER(value)",ISBLANK:"ISBLANK(value)",
+ AND:"AND(logical1, [logical2], ...)",OR:"OR(logical1, [logical2], ...)",NOT:"NOT(logical)",ABS:"ABS(number)",SUBSTITUTE:"SUBSTITUTE(text, old_text, new_text, [instance_num])",VLOOKUP:"VLOOKUP(lookup_value, table_array, col_index_num, [range_lookup])",ISTEXT:"ISTEXT(value)",AVERAGEIF:"AVERAGEIF(range, criteria, [average_range])"};
+var FN_NAMES=Object.keys(FN_SIG).sort();
+
+function tokenize(src){
+  var t=[],i=0,n=src.length,m;
+  while(i<n){
+    var ch=src[i];
+    if(/\s/.test(ch)){i++;continue;}
+    if(ch==='"'){var j=i+1,s="";while(j<n){if(src[j]==='"'){if(src[j+1]==='"'){s+='"';j+=2;continue;}break;}s+=src[j++];}if(j>=n)throw new Error("str");t.push({k:"s",v:s});i=j+1;continue;}
+    m=/^(\d+\.?\d*|\.\d+)(e[-+]?\d+)?/i.exec(src.slice(i));if(m){t.push({k:"n",v:parseFloat(m[0])});i+=m[0].length;continue;}
+    m=/^\$?[A-Za-z]{1,3}\$?\d+(?::\$?[A-Za-z]{1,3}\$?\d+)?(?![A-Za-z0-9_(])/.exec(src.slice(i));
+    if(m){t.push({k:"r",v:m[0].toUpperCase().replace(/\$/g,"")});i+=m[0].length;continue;}
+    m=/^[A-Za-z_][A-Za-z0-9_.]*/.exec(src.slice(i));if(m){t.push({k:"id",v:m[0].toUpperCase()});i+=m[0].length;continue;}
+    m=/^(<=|>=|<>|[-+*\/^&=<>(),%:])/.exec(src.slice(i));if(m){t.push({k:"o",v:m[0]});i+=m[0].length;continue;}
+    throw new Error("tok");
+  }
+  return t;
+}
+function parse(tokens){
+  var p=0;
+  function pk(){return tokens[p];}
+  function eat(v){var x=tokens[p];if(x&&x.k==="o"&&x.v===v){p++;return true;}return false;}
+  function cmp(){var l=cat();for(;;){var x=pk();if(x&&x.k==="o"&&/^(=|<>|<=|>=|<|>)$/.test(x.v)){p++;l={t:"b",o:x.v,l:l,r:cat()};}else return l;}}
+  function cat(){var l=add();while(eat("&"))l={t:"b",o:"&",l:l,r:add()};return l;}
+  function add(){var l=mul();for(;;){var x=pk();if(x&&x.k==="o"&&(x.v==="+"||x.v==="-")){p++;l={t:"b",o:x.v,l:l,r:mul()};}else return l;}}
+  function mul(){var l=pow();for(;;){var x=pk();if(x&&x.k==="o"&&(x.v==="*"||x.v==="/")){p++;l={t:"b",o:x.v,l:l,r:pow()};}else return l;}}
+  function pow(){var l=un();while(eat("^"))l={t:"b",o:"^",l:l,r:un()};return l;}
+  function un(){if(eat("-"))return {t:"u",o:"-",a:un()};if(eat("+"))return un();return pct();}
+  function pct(){var a=prim();while(eat("%"))a={t:"b",o:"/",l:a,r:{t:"n",v:100}};return a;}
+  function prim(){
+    var x=tokens[p++];if(!x)throw new Error("eof");
+    if(x.k==="n")return {t:"n",v:x.v};
+    if(x.k==="s")return {t:"s",v:x.v};
+    if(x.k==="r")return {t:"r",v:x.v};
+    if(x.k==="id"){
+      if(x.v==="TRUE")return {t:"bool",v:true};if(x.v==="FALSE")return {t:"bool",v:false};
+      if(eat("(")){var args=[];if(!eat(")")){for(;;){var nx=pk();if(nx&&nx.k==="o"&&(nx.v===","||nx.v===")")){args.push({t:"empty"});}else args.push(cmp());if(eat(","))continue;if(eat(")"))break;throw new Error("args");}}return {t:"f",n:x.v,a:args};}
+      return {t:"name",v:x.v};
+    }
+    if(x.k==="o"&&x.v==="("){var e=cmp();if(!eat(")"))throw new Error("paren");return e;}
+    throw new Error("syn");
+  }
+  var ast=cmp();if(p<tokens.length)throw new Error("extra");return ast;
+}
+function toNum(v){if(isErr(v))return v;if(v==null||v==="")return 0;if(typeof v==="number")return v;if(typeof v==="boolean")return v?1:0;var s=String(v).trim();if(/^[-+]?(\d+\.?\d*|\.\d+)(e[-+]?\d+)?$/i.test(s))return parseFloat(s);return ERR("#VALUE!");}
+function toStr(v){if(v==null)return "";if(typeof v==="boolean")return v?"TRUE":"FALSE";if(typeof v==="number")return fmtGeneral(v);return String(v);}
+function fmtGeneral(n){if(!isFinite(n))return "#NUM!";if(Number.isInteger(n)&&Math.abs(n)<1e11)return String(n);var s=String(parseFloat(n.toPrecision(10)));if(Math.abs(n)>=1e11||(Math.abs(n)<1e-5&&n!==0))s=n.toExponential(5).replace(/\.?0+e/,"E").replace("e","E");return s;}
+function crit(c){
+  if(typeof c==="number")return function(v){return typeof v==="number"&&v===c;};
+  var s=String(c),m=/^(<=|>=|<>|<|>|=)?(.*)$/.exec(s),op=m[1]||"=",rest=m[2];
+  var num=/^[-+]?(\d+\.?\d*|\.\d+)$/.test(rest.trim())?parseFloat(rest):null;
+  return function(v){
+    if(num!==null&&(typeof v==="number"||(typeof v==="string"&&/^[-+]?\d+\.?\d*$/.test(v.trim())&&false))){var x=v;switch(op){case "=":return x===num;case "<>":return x!==num;case ">":return x>num;case "<":return x<num;case ">=":return x>=num;case "<=":return x<=num;}}
+    if(num!==null&&typeof v!=="number"){return op==="<>";}
+    var a=(v==null?"":String(v)).toLowerCase(),b=rest.toLowerCase();
+    if(/[*?]/.test(b)){var re=new RegExp("^"+b.replace(/[.+^${}()|[\]\\]/g,"\\$&").replace(/\*/g,".*").replace(/\?/g,".")+"$");return op==="<>"?!re.test(a):re.test(a);}
+    return op==="<>"?a!==b:(op==="="?a===b:false);
+  };
+}
+function evalAst(n,ctx){
+  switch(n.t){
+    case "n":case "s":case "bool":return n.v;
+    case "empty":return null;
+    case "name":return ERR("#NAME?");
+    case "r":{var parts=n.v.split(":"),a=P(parts[0]);if(!a)return ERR("#REF!");if(parts.length===1)return ctx.get(a.c,a.r);var b=P(parts[1]);if(!b)return ERR("#REF!");return ctx.range(Math.min(a.c,b.c),Math.min(a.r,b.r),Math.max(a.c,b.c),Math.max(a.r,b.r));}
+    case "u":{var x=toNum(evalAst(n.a,ctx));return isErr(x)?x:-x;}
+    case "b":{
+      var l=evalAst(n.l,ctx),r=evalAst(n.r,ctx);if(Array.isArray(l))l=l[0]&&l[0][0];if(Array.isArray(r))r=r[0]&&r[0][0];
+      if(isErr(l))return l;if(isErr(r))return r;
+      if(n.o==="&")return toStr(l)+toStr(r);
+      if(/^(=|<>|<|>|<=|>=)$/.test(n.o)){
+        var ln=l==null?(typeof r==="string"?"":0):l,rn=r==null?(typeof l==="string"?"":0):r,res;
+        var tl=typeof ln,tr=typeof rn;
+        if(tl!==tr){ if(n.o==="=")return false; if(n.o==="<>")return true; var rank={number:1,string:2,boolean:3};res=(rank[tl]||0)-(rank[tr]||0);} else if(tl==="string"){var s1=ln.toLowerCase(),s2=rn.toLowerCase();res=s1<s2?-1:(s1>s2?1:0);} else res=ln<rn?-1:(ln>rn?1:0);
+        switch(n.o){case "=":return res===0;case "<>":return res!==0;case "<":return res<0;case ">":return res>0;case "<=":return res<=0;case ">=":return res>=0;}
+      }
+      var a=toNum(l),b2=toNum(r);if(isErr(a))return a;if(isErr(b2))return b2;
+      switch(n.o){case "+":return a+b2;case "-":return a-b2;case "*":return a*b2;case "/":return b2===0?ERR("#DIV/0!"):a/b2;case "^":return Math.pow(a,b2);}
+      return ERR("#VALUE!");
+    }
+    case "f":return callFn(n,ctx);
+  }
+  return ERR("#VALUE!");
+}
+function flatNums(args,ctx,direct){var out=[];for(var i=0;i<args.length;i++){var v=evalAst(args[i],ctx);if(isErr(v))return v;if(Array.isArray(v)){for(var r=0;r<v.length;r++)for(var c=0;c<v[r].length;c++){var x=v[r][c];if(isErr(x))return x;if(typeof x==="number")out.push(x);}}else if(v!=null){var nn=toNum(v);if(isErr(nn))return nn;out.push(nn);}else if(args[i].t==="empty")out.push(0);}return out;}
+function cells2(v){var o=[];if(Array.isArray(v)){v.forEach(function(r){r.forEach(function(x){o.push(x);});});}else o.push(v);return o;}
+function callFn(n,ctx){
+  var f=n.name||n.n,a=n.a;
+  function ev(i){var v=evalAst(a[i],ctx);return Array.isArray(v)?(v[0]&&v[0][0]):v;}
+  function need(k){if(a.length<k)return ERR("#VALUE!");return null;}
+  switch(f){
+    case "SUM":{var x=flatNums(a,ctx);if(isErr(x))return x;return x.reduce(function(s,v){return s+v;},0);}
+    case "AVERAGE":{var x=flatNums(a,ctx);if(isErr(x))return x;return x.length?x.reduce(function(s,v){return s+v;},0)/x.length:ERR("#DIV/0!");}
+    case "COUNT":{var c=0;for(var i=0;i<a.length;i++){var v=evalAst(a[i],ctx);cells2(v).forEach(function(z){if(typeof z==="number")c++;});}return c;}
+    case "COUNTA":{var c2=0;for(var i2=0;i2<a.length;i2++){cells2(evalAst(a[i2],ctx)).forEach(function(z){if(z!=null&&z!=="")c2++;});}return c2;}
+    case "MAX":{var x=flatNums(a,ctx);if(isErr(x))return x;return x.length?Math.max.apply(null,x):0;}
+    case "MIN":{var x=flatNums(a,ctx);if(isErr(x))return x;return x.length?Math.min.apply(null,x):0;}
+    case "ABS":{var v=toNum(ev(0));return isErr(v)?v:Math.abs(v);}
+    case "ROUND":{var v=toNum(ev(0)),d=a.length>1?toNum(ev(1)):0;if(isErr(v))return v;if(isErr(d))return d;var m=Math.pow(10,d);return Math.round(v*m+(v<0?-1e-9:1e-9))/m;}
+    case "IF":{var cnd=ev(0);if(isErr(cnd))return cnd;var tr=typeof cnd==="string"?(cnd.toUpperCase()==="TRUE"?true:null):!!cnd;if(tr===null)return ERR("#VALUE!");if(tr)return a.length>1?ev(1):true;return a.length>2?ev(2):false;}
+    case "AND":{var all=true;for(var i3=0;i3<a.length;i3++){var v3=ev(i3);if(isErr(v3))return v3;if(!v3)all=false;}return all;}
+    case "OR":{var any=false;for(var i4=0;i4<a.length;i4++){var v4=ev(i4);if(isErr(v4))return v4;if(v4)any=true;}return any;}
+    case "NOT":{var v5=ev(0);return isErr(v5)?v5:!v5;}
+    case "TRIM":{var v=ev(0);if(isErr(v))return v;return toStr(v).replace(/\s+/g," ").trim();}
+    case "UPPER":{var v=ev(0);return isErr(v)?v:toStr(v).toUpperCase();}
+    case "LOWER":{var v=ev(0);return isErr(v)?v:toStr(v).toLowerCase();}
+    case "PROPER":{var v=ev(0);if(isErr(v))return v;return toStr(v).toLowerCase().replace(/(^|[^a-z])([a-z])/g,function(m,p,c){return p+c.toUpperCase();});}
+    case "LEN":{var v=ev(0);return isErr(v)?v:toStr(v).length;}
+    case "LEFT":{var v=ev(0),k=a.length>1?toNum(ev(1)):1;if(isErr(v))return v;if(isErr(k)||k<0)return ERR("#VALUE!");return toStr(v).slice(0,k);}
+    case "RIGHT":{var v=ev(0),k=a.length>1?toNum(ev(1)):1;if(isErr(v))return v;if(isErr(k)||k<0)return ERR("#VALUE!");var s=toStr(v);return k===0?"":s.slice(-k);}
+    case "MID":{var v=ev(0),st=toNum(ev(1)),k=toNum(ev(2));if(isErr(v))return v;if(isErr(st)||isErr(k)||st<1||k<0)return ERR("#VALUE!");return toStr(v).substr(st-1,k);}
+    case "CONCAT":case "CONCATENATE":{var s="";for(var i5=0;i5<a.length;i5++){var v6=evalAst(a[i5],ctx);if(isErr(v6))return v6;cells2(v6).forEach(function(z){s+=toStr(z);});}return s;}
+    case "SUBSTITUTE":{var v=ev(0),o=ev(1),nw=ev(2);if(isErr(v))return v;var s2=toStr(v),os=toStr(o),ns=toStr(nw);if(!os)return s2;if(a.length>3){var inst=toNum(ev(3)),idx=-1,cnt=0,pos=0;while((idx=s2.indexOf(os,pos))>-1){cnt++;if(cnt===inst)return s2.slice(0,idx)+ns+s2.slice(idx+os.length);pos=idx+os.length;}return s2;}return s2.split(os).join(ns);}
+    case "VALUE":{var v=ev(0);if(isErr(v))return v;var nn=toNum(v);return nn;}
+    case "ISNUMBER":{return typeof ev(0)==="number";}
+    case "ISTEXT":{return typeof ev(0)==="string"&&ev(0)!=="";}
+    case "ISBLANK":{var v=ev(0);return v==null||v==="";}
+    case "COUNTIF":{var rg=evalAst(a[0],ctx),cr=ev(1);if(isErr(rg))return rg;var fn=crit(cr),c=0;cells2(rg).forEach(function(z){if(fn(z))c++;});return c;}
+    case "SUMIF":{var rg=evalAst(a[0],ctx),cr=ev(1);if(isErr(rg))return rg;var sr=a.length>2?evalAst(a[2],ctx):rg;var fn=crit(cr),s=0,rr=cells2(rg),ss=cells2(sr);for(var i6=0;i6<rr.length;i6++){if(fn(rr[i6])&&typeof ss[i6]==="number")s+=ss[i6];}return s;}
+    case "AVERAGEIF":{var rg=evalAst(a[0],ctx),cr=ev(1);if(isErr(rg))return rg;var sr=a.length>2?evalAst(a[2],ctx):rg;var fn=crit(cr),s=0,k=0,rr=cells2(rg),ss=cells2(sr);for(var i7=0;i7<rr.length;i7++){if(fn(rr[i7])&&typeof ss[i7]==="number"){s+=ss[i7];k++;}}return k?s/k:ERR("#DIV/0!");}
+    case "VLOOKUP":{var lv=ev(0),tb=evalAst(a[1],ctx),ci=toNum(ev(2)),ex=a.length>3?!ev(3):false;if(isErr(lv))return lv;if(!Array.isArray(tb))return ERR("#VALUE!");if(isErr(ci)||ci<1||ci>tb[0].length)return ERR("#REF!");
+      for(var r=0;r<tb.length;r++){var kv=tb[r][0];if(typeof lv==="string"&&typeof kv==="string"?kv.toLowerCase()===lv.toLowerCase():kv===lv)return tb[r][ci-1]==null?0:tb[r][ci-1];}return ERR("#N/A");}
+  }
+  return ERR("#NAME?");
+}
+function shiftFormula(f,dc,dr){
+  return f.replace(/("[^"]*")|(\$?)([A-Z]{1,3})(\$?)(\d+)(?![A-Za-z0-9_(])/g,function(m,q,d1,cn,d2,rn,off,full){
+    if(q)return q;var pre=full[off-1];if(pre&&/[A-Za-z_.]/.test(pre))return m;
+    var c=colIndex(cn),r=+rn-1;if(!d1)c+=dc;if(!d2)r+=dr;if(c<0||r<0)return "#REF!";return d1+colName(c)+d2+(r+1);
+  });
+}
+
+/* ---------------- sheet widget ---------------- */
+var CSS=".xl{font-family:'Segoe UI',system-ui,-apple-system,Roboto,sans-serif;font-size:13px;color:#222;background:#fff;border:1px solid #bdbdbd;display:flex;flex-direction:column;position:relative;overflow:hidden;border-radius:6px;user-select:none;-webkit-user-select:none;outline:none}"+
+".xl *{box-sizing:border-box}.xl button{font:inherit;color:inherit;cursor:pointer}"+
+".xl-title{background:#217346;color:#fff;display:flex;align-items:center;gap:8px;height:34px;padding:0 8px;flex:0 0 auto}.xl-title .q{display:flex;gap:2px}.xl-title .q button{background:transparent;border:0;color:#fff;width:32px;height:30px;font-size:16px;border-radius:3px}.xl-title .q button:hover{background:rgba(255,255,255,.18)}.xl-title .q button:disabled{opacity:.4}"+
+".xl-title .nm{flex:1;text-align:center;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.xl-title .sr{background:#fff;color:#777;border-radius:3px;padding:3px 10px;font-size:12px;width:120px;white-space:nowrap}"+
+".xl-tabs{background:#217346;display:flex;overflow-x:auto;flex:0 0 auto;scrollbar-width:none}.xl-tabs::-webkit-scrollbar{display:none}.xl-tabs button{background:transparent;border:0;color:#fff;padding:0 14px;height:32px;font-size:13px;white-space:nowrap;flex:0 0 auto}.xl-tabs button.on{background:#f3f3f3;color:#217346;font-weight:600}.xl-tabs button.off{opacity:.7}"+
+".xl-ribbon{background:#f3f3f3;border-bottom:1px solid #d0d0d0;display:flex;overflow-x:auto;height:92px;flex:0 0 auto;padding:4px 4px 0}.xl-grp{display:flex;flex-direction:column;border-right:1px solid #d6d6d6;padding:0 6px;flex:0 0 auto;min-width:46px}.xl-grp .row{display:flex;gap:2px;align-items:flex-start;flex:1}.xl-grp .gl{text-align:center;font-size:11px;color:#555;height:16px;line-height:16px}"+
+".xl-b{background:transparent;border:1px solid transparent;border-radius:3px;min-width:30px;min-height:28px;padding:0 5px;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.05;font-size:12px}.xl-b:hover{background:#e1e1e1;border-color:#c8c8c8}.xl-b.on{background:#c9e0d3;border-color:#217346}.xl-b.big{min-height:60px;min-width:44px}.xl-b .ic{font-size:20px;line-height:1.1}.xl-b.dis{opacity:.45}"+
+".xl-sel{border:1px solid #adadad;background:#fff;height:24px;font-size:12px;border-radius:2px;padding:0 4px}.xl-col{display:flex;flex-direction:column;gap:2px}"+
+".xl-fbar{display:flex;align-items:center;background:#fff;border-bottom:1px solid #d0d0d0;height:30px;flex:0 0 auto;padding:2px 0}.xl-name{width:74px;border:1px solid #c8c8c8;height:24px;margin:0 4px;font-size:13px;padding:0 6px;text-align:left;border-radius:2px;user-select:text;-webkit-user-select:text;background:#fff}"+
+".xl-fx{display:flex;align-items:center;gap:2px;padding:0 4px;color:#555}.xl-fx button{border:0;background:transparent;width:26px;height:24px;font-size:15px;font-weight:700}.xl-fx .x{color:#b33}.xl-fx .ok{color:#217346}.xl-fx i{font-family:serif;font-size:15px;color:#333;padding:0 4px;border-left:1px solid #ccc}.xl-formula{flex:1;min-width:0;border:1px solid #c8c8c8;height:24px;font-size:13px;padding:0 6px;margin-right:4px;border-radius:2px;user-select:text;-webkit-user-select:text;background:#fff}.xl-formula:focus,.xl-name:focus{outline:2px solid #217346;outline-offset:-1px}"+
+".xl-body{position:relative;flex:1;min-height:150px;background:#fff;overflow:hidden}.xl-corner{position:absolute;left:0;top:0;width:40px;height:20px;background:#e6e6e6;border-right:1px solid #bfbfbf;border-bottom:1px solid #bfbfbf;z-index:3}.xl-corner:after{content:'';position:absolute;right:3px;bottom:3px;border:7px solid transparent;border-bottom-color:#b0b0b0;border-right-color:#b0b0b0}"+
+".xl-colh{position:absolute;left:40px;top:0;right:0;height:20px;overflow:hidden;background:#e6e6e6;z-index:2}.xl-rowh{position:absolute;left:0;top:20px;bottom:0;width:40px;overflow:hidden;background:#e6e6e6;z-index:2}.xl-colh>div,.xl-rowh>div{position:relative}"+
+".xl-hc{position:absolute;top:0;height:20px;border-right:1px solid #bfbfbf;border-bottom:1px solid #bfbfbf;text-align:center;color:#444;line-height:19px;font-size:12px}.xl-hr{position:absolute;left:0;width:40px;border-right:1px solid #bfbfbf;border-bottom:1px solid #bfbfbf;text-align:center;color:#444;font-size:12px}.xl-hc.s,.xl-hr.s{background:#d2d2d2;color:#217346;font-weight:600}.xl-hc.s{border-bottom:2px solid #217346}.xl-hr.s{border-right:2px solid #217346}.xl-hc.a,.xl-hr.a{background:#217346;color:#fff;font-weight:600}"+
+".xl-scroll{position:absolute;left:40px;top:20px;right:0;bottom:0;overflow:auto;background:#fff;-webkit-overflow-scrolling:touch}.xl-sheet{position:relative}.xc{position:absolute;border-right:1px solid #d9d9d9;border-bottom:1px solid #d9d9d9;padding:0 3px;overflow:hidden;white-space:nowrap;font-family:Calibri,Carlito,'Segoe UI',Arial,sans-serif;display:flex;align-items:flex-end;padding-bottom:1px}.xc span{display:block;width:100%;overflow:hidden;text-overflow:clip}"+
+".xl-range{position:absolute;background:rgba(33,115,70,.12);border:1px solid #217346;pointer-events:none;z-index:4}.xl-active{position:absolute;border:2px solid #217346;pointer-events:none;z-index:5}.xl-handle{position:absolute;width:7px;height:7px;background:#217346;border:1px solid #fff;z-index:6;cursor:crosshair}.xl-handle:before{content:'';position:absolute;left:-12px;top:-12px;right:-12px;bottom:-12px}"+
+".xl-ref{position:absolute;border:2px dashed;pointer-events:none;z-index:4}.xl-copy{position:absolute;border:2px dashed #217346;pointer-events:none;z-index:4;animation:xlants .8s linear infinite;background-image:none}@keyframes xlants{from{border-color:#217346}50%{border-color:#7fc49a}to{border-color:#217346}}"+
+".xl input,.xl select,.xl textarea{color:#000;-webkit-text-fill-color:#000;caret-color:#000}.xl input,.xl textarea{background:#fff}.xl-formula,.xl-name{font-size:16px}"+
+".xl-edit{position:absolute;z-index:8;border:2px solid #217346;background:#fff;color:#000;-webkit-text-fill-color:#000;caret-color:#000;font-size:16px;font-family:Calibri,Carlito,'Segoe UI',Arial,sans-serif;padding:0 3px;outline:none;user-select:text;-webkit-user-select:text;margin:0}"+
+".xl-fill{position:absolute;border:1px dashed #217346;pointer-events:none;z-index:6}"+
+".xl-sheets{display:flex;align-items:flex-end;background:#f3f3f3;border-top:1px solid #d0d0d0;height:28px;flex:0 0 auto;padding:0 6px}.xl-st{background:#fff;border:1px solid #c8c8c8;border-top:0;border-bottom:3px solid #217346;color:#217346;font-weight:600;padding:2px 16px;height:25px;font-size:12px}.xl-plus{margin-left:8px;border:1px solid #c8c8c8;background:#fff;border-radius:50%;width:20px;height:20px;line-height:16px;font-size:14px;margin-bottom:3px;color:#777}"+
+".xl-status{background:#217346;color:#fff;display:flex;align-items:center;gap:8px;height:28px;padding:0 8px;font-size:11px;flex:0 0 auto;white-space:nowrap;overflow:hidden}.xl-status .sum{overflow:hidden;text-overflow:ellipsis;min-width:0;flex:0 1 auto}.xl-status .mode{flex:0 0 auto}.xl-status .sp{flex:1}.xl-status button{background:transparent;border:0;color:#fff;font-size:15px;width:24px;height:22px}.xl-status .rm{border:1px solid rgba(255,255,255,.6);border-radius:3px;padding:0 8px;height:20px;font-size:11px;width:auto;flex:0 0 auto;white-space:nowrap}.xl-status .rm.on{background:#fff;color:#217346}"+
+".xl-menu{position:absolute;background:#fff;border:1px solid #bdbdbd;box-shadow:0 6px 18px rgba(0,0,0,.25);z-index:30;min-width:190px;padding:3px 0;font-size:13px;border-radius:3px}.xl-menu button{display:block;width:100%;text-align:left;background:transparent;border:0;padding:7px 16px;min-height:32px}.xl-menu button:hover{background:#e9f2ed}.xl-menu button.dis{color:#999}.xl-menu hr{border:0;border-top:1px solid #e1e1e1;margin:3px 0}"+
+".xl-ac{position:absolute;background:#fff;border:1px solid #bdbdbd;box-shadow:0 4px 12px rgba(0,0,0,.25);z-index:31;font-size:13px;min-width:170px}.xl-ac div{padding:5px 10px;display:flex;gap:8px;align-items:center;min-height:30px;cursor:pointer}.xl-ac div i{font-family:serif;color:#217346;font-weight:700}.xl-ac div.on{background:#cfe3d8}"+
+".xl-tip{position:absolute;background:#fffbe6;border:1px solid #bdb27a;z-index:31;font-size:12px;padding:4px 8px;box-shadow:0 2px 6px rgba(0,0,0,.2);max-width:300px;white-space:normal}.xl-tip b{color:#000}"+
+".xl-dlg{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:#f0f0f0;border:1px solid #888;box-shadow:0 10px 30px rgba(0,0,0,.4);z-index:40;width:min(340px,92%);font-size:13px;border-radius:4px}.xl-dlg .h{background:#fff;padding:8px 12px;font-weight:600;border-bottom:1px solid #ccc;display:flex;justify-content:space-between}.xl-dlg .bd{padding:10px 12px;display:flex;flex-direction:column;gap:8px}.xl-dlg input[type=text]{height:28px;border:1px solid #adadad;padding:0 6px;width:100%;user-select:text;-webkit-user-select:text}.xl-dlg label{display:flex;gap:6px;align-items:center;min-height:26px}.xl-dlg .ft{display:flex;gap:6px;justify-content:flex-end;padding:8px 12px;flex-wrap:wrap}.xl-dlg .ft button{background:#e1e1e1;border:1px solid #adadad;padding:6px 12px;min-height:32px;border-radius:2px}.xl-dlg .ft button.pri{background:#217346;border-color:#217346;color:#fff}.xl-dlg .msg{color:#217346;font-weight:600;min-height:18px}"+
+".xl-toast{position:absolute;left:50%;bottom:44px;transform:translateX(-50%);background:#333;color:#fff;padding:8px 14px;border-radius:18px;z-index:50;font-size:12.5px;max-width:92%;text-align:center}"+
+".xl-fa{width:0;height:0}.xl-ff{position:absolute;right:2px;top:2px;width:15px;height:15px;background:#fff;border:1px solid #888;font-size:9px;line-height:13px;text-align:center;color:#444;z-index:3;cursor:pointer;padding:0}";
+var cssDone=false;
+function injectCss(){if(cssDone)return;cssDone=true;var s=document.createElement("style");s.textContent=CSS;document.head.appendChild(s);}
+
+function create(host,opt){
+  opt=opt||{};injectCss();
+  var ROWS=opt.rows||40,COLS=opt.cols||12,BASEW=64,BASEH=20,HEAD_W=40;
+  var cells={},cv={},cw=[],hidden={},Z=1,fmtRows={};
+  for(var i=0;i<COLS;i++)cw.push(BASEW);
+  var sel={a:{c:0,r:0},f:{c:0,r:0}},E=null,clip=null,undo=[],redo=[],filt={on:false,crit:{},region:null},rangeMode=false,findOpt={mc:false,me:false};
+  var tabsAllowed=opt.tabs||["Home","Data","Formulas","View"];
+  var curTab="Home",title=opt.title||"Book1";
+  var listeners=[];
+  /* ---- DOM ---- */
+  host.innerHTML="";
+  var root=document.createElement("div");root.className="xl";root.tabIndex=0;if(opt.height)root.style.height=opt.height+"px";
+  root.setAttribute("role","application");root.setAttribute("aria-label","Practice spreadsheet, works like Excel");
+  root.innerHTML=
+  '<div class="xl-title"><div class="q"><button data-c="save" title="Save" aria-label="Save">💾</button><button data-c="undo" title="Undo (Ctrl+Z)" aria-label="Undo">↶</button><button data-c="redo" title="Redo (Ctrl+Y)" aria-label="Redo">↷</button></div><div class="nm">'+esc(title)+' - Excel</div><div class="sr">🔍 Search</div></div>'+
+  '<div class="xl-tabs" role="tablist"></div><div class="xl-ribbon"></div>'+
+  '<div class="xl-fbar"><input class="xl-name" aria-label="Name Box" spellcheck="false" autocomplete="off"><div class="xl-fx"><button class="x" data-c="cancel" aria-label="Cancel (Esc)">✕</button><button class="ok" data-c="enter" aria-label="Enter">✓</button><i>fx</i></div><input class="xl-formula" aria-label="Formula bar" spellcheck="false" autocomplete="off" autocapitalize="off"></div>'+
+  '<div class="xl-body"><div class="xl-corner"></div><div class="xl-colh"><div></div></div><div class="xl-rowh"><div></div></div><div class="xl-scroll"><div class="xl-sheet"></div></div></div>'+
+  '<div class="xl-sheets"><div class="xl-st">Sheet1</div><button class="xl-plus" data-c="newsheet" aria-label="New sheet">+</button></div>'+
+  '<div class="xl-status"><span class="mode">Ready</span><span class="sum"></span><span class="sp"></span><button class="rm" data-c="rangemode" title="Turn on to select ranges by dragging on a phone">Select range</button><button data-c="zout" aria-label="Zoom out">−</button><span class="zv">100%</span><button data-c="zin" aria-label="Zoom in">+</button></div>';
+  host.appendChild(root);
+  var $=function(s){return root.querySelector(s);};
+  var elTabs=$(".xl-tabs"),elRib=$(".xl-ribbon"),elName=$(".xl-name"),elFx=$(".xl-formula"),elScroll=$(".xl-scroll"),elSheet=$(".xl-sheet"),elColh=$(".xl-colh>div"),elRowh=$(".xl-rowh>div"),elMode=$(".mode"),elSum=$(".sum"),elZ=$(".zv");
+  var xs=[],ys=[],cellEls={},hcEls=[],hrEls=[];
+  var elRange=div("xl-range"),elActive=div("xl-active"),elHandle=div("xl-handle"),elCopy=div("xl-copy"),elFill=div("xl-fill"),elEdit=document.createElement("input");
+  elEdit.className="xl-edit";elEdit.style.display="none";elEdit.spellcheck=false;elEdit.setAttribute("autocapitalize","off");elEdit.setAttribute("aria-label","Cell editor");elEdit.setAttribute("enterkeyhint","done");elEdit.setAttribute("autocomplete","off");elEdit.setAttribute("autocorrect","off");elEdit.setAttribute("inputmode","text");
+  [elRange,elActive,elHandle,elCopy,elFill].forEach(function(e){e.style.display="none";});
+  function div(c){var d=document.createElement("div");d.className=c;return d;}
+  var refEls=[];
+
+  function emit(){listeners.forEach(function(f){try{f();}catch(e){}});if(opt.onChange)try{opt.onChange(api);}catch(e){}}
+  function toast(msg){var t=div("xl-toast");t.textContent=msg;root.appendChild(t);setTimeout(function(){if(t.parentNode)t.parentNode.removeChild(t);},2600);}
+
+  /* ---- layout ---- */
+  function colW(c){return Math.round(cw[c]*Z);}
+  function rowH(r){return hidden[r]?0:Math.round(BASEH*Z);}
+  function layout(){
+    xs=[0];for(var c=0;c<COLS;c++)xs.push(xs[c]+colW(c));
+    ys=[0];for(var r=0;r<ROWS;r++)ys.push(ys[r]+rowH(r));
+    elSheet.style.width=xs[COLS]+"px";elSheet.style.height=ys[ROWS]+"px";
+    elColh.style.width=xs[COLS]+"px";elRowh.style.height=ys[ROWS]+"px";
+    var fs=(14.67*Z).toFixed(2)+"px";
+    for(var r2=0;r2<ROWS;r2++)for(var c2=0;c2<COLS;c2++){var e=cellEls[A(c2,r2)];if(!e)continue;var st=e.style;st.left=xs[c2]+"px";st.top=ys[r2]+"px";st.width=colW(c2)+"px";st.height=rowH(r2)+"px";st.fontSize=fs;st.display=hidden[r2]?"none":"flex";}
+    for(var c3=0;c3<COLS;c3++){var h=hcEls[c3];h.style.left=xs[c3]+"px";h.style.width=colW(c3)+"px";h.style.fontSize=(12*Math.max(.85,Z))+"px";}
+    for(var r3=0;r3<ROWS;r3++){var h2=hrEls[r3];h2.style.top=ys[r3]+"px";h2.style.height=rowH(r3)+"px";h2.style.display=hidden[r3]?"none":"block";h2.style.lineHeight=(rowH(r3)-1)+"px";h2.style.fontSize=(12*Math.max(.85,Z))+"px";}
+    elZ.textContent=Math.round(Z*100)+"%";
+    paintSel();
+  }
+  (function build(){
+    for(var r=0;r<ROWS;r++)for(var c=0;c<COLS;c++){var e=div("xc");e.setAttribute("data-a",A(c,r));e.appendChild(document.createElement("span"));elSheet.appendChild(e);cellEls[A(c,r)]=e;}
+    for(var c2=0;c2<COLS;c2++){var h=div("xl-hc");h.textContent=colName(c2);elColh.appendChild(h);hcEls.push(h);}
+    for(var r2=0;r2<ROWS;r2++){var h2=div("xl-hr");h2.textContent=r2+1;elRowh.appendChild(h2);hrEls.push(h2);}
+    [elRange,elActive,elHandle,elCopy,elFill,elEdit].forEach(function(e){elSheet.appendChild(e);});
+  })();
+
+  /* ---- data / formulas ---- */
+  function getCell(c,r){return cells[A(c,r)];}
+  var calc={gen:0,busy:{}};
+  function valueAt(c,r){
+    var k=A(c,r),ce=cells[k];if(!ce)return null;
+    if(!ce.f)return ce.v==null?null:ce.v;
+    if(cv[k]!==undefined&&cv[k].g===calc.gen)return cv[k].v;
+    if(calc.busy[k])return 0;
+    calc.busy[k]=1;var v;
+    try{var ast=ce.ast||(ce.ast=parse(tokenize(ce.f.slice(1))));v=evalAst(ast,ctx);if(Array.isArray(v))v=v[0]&&v[0][0];if(v===undefined)v=null;}
+    catch(ex){v=ERR(/^(tok|str|syn|eof|paren|args|extra)$/.test(ex.message)?"#NAME?":"#VALUE!");}
+    delete calc.busy[k];cv[k]={g:calc.gen,v:v};return v;
+  }
+  var ctx={get:function(c,r){if(c<0||r<0||c>=COLS||r>=ROWS)return ERR("#REF!");return valueAt(c,r);},
+    range:function(c0,r0,c1,r1){var o=[];for(var r=r0;r<=r1;r++){var row=[];for(var c=c0;c<=c1;c++)row.push(c<COLS&&r<ROWS?valueAt(c,r):null);o.push(row);}return o;}};
+  function recalc(){calc.gen++;}
+  function parseEntry(txt){
+    if(txt==null||txt==="")return null;
+    if(txt[0]==="=")return {f:txt,v:null};
+    if(txt[0]==="'")return {v:txt.slice(1)};
+    var s=txt.trim();
+    if(/^[-+]?(\d+\.?\d*|\.\d+)(e[-+]?\d+)?$/i.test(s))return {v:parseFloat(s)};
+    if(/^[-+]?(\d+\.?\d*|\.\d+)%$/.test(s))return {v:parseFloat(s)/100,pct:true};
+    if(/^true$/i.test(s))return {v:true};if(/^false$/i.test(s))return {v:false};
+    return {v:txt};
+  }
+  function rawOf(c,r){var ce=cells[A(c,r)];if(!ce)return "";if(ce.f)return ce.f;if(typeof ce.v==="boolean")return ce.v?"TRUE":"FALSE";if(typeof ce.v==="number"){return ce.pct?(+(ce.v*100).toPrecision(12))+"%":fmtGeneral(ce.v);}return ce.v==null?"":String(ce.v);}
+  function setRaw(c,r,txt,keepFmt){
+    if(c<0||r<0||c>=COLS||r>=ROWS)return;
+    var k=A(c,r),old=cells[k],p=parseEntry(txt==null?"":String(txt));
+    if(!p){if(old&&old.fmt&&keepFmt!==false){cells[k]={v:null,fmt:old.fmt};}else delete cells[k];return;}
+    var ce={v:p.v,fmt:old&&old.fmt?Object.assign({},old.fmt):undefined};if(p.f)ce.f=p.f;if(p.pct){ce.fmt=ce.fmt||{};ce.fmt.nf="pct";}
+    cells[k]=ce;
+  }
+  function numFmt(v,nf){
+    if(typeof v!=="number")return toStr(v);
+    function thou(x,d){var s=Math.abs(x).toFixed(d);var p=s.split(".");p[0]=p[0].replace(/\B(?=(\d{3})+(?!\d))/g,",");return (x<0?"-":"")+p.join(".");}
+    switch(nf){case "num":return v.toFixed(2);case "comma":return thou(v,2);case "cur":return (v<0?"-":"")+"₦"+thou(Math.abs(v),2);case "pct":return (v*100).toFixed(0)+"%";case "dec1":return v.toFixed(1);default:return fmtGeneral(v);}
+  }
+  function display(c,r){
+    var v=valueAt(c,r),ce=cells[A(c,r)];
+    if(v==null)return "";if(isErr(v))return v.e;
+    if(typeof v==="boolean")return v?"TRUE":"FALSE";
+    if(typeof v==="number"){var nf=ce&&ce.fmt&&ce.fmt.nf;var s=numFmt(v,nf);
+      var maxc=Math.max(3,Math.floor(colW(c)/(7.2*Z))-1);
+      if(!nf&&s.length>maxc&&Math.abs(v)<1e11){var d=Math.max(0,maxc-String(Math.trunc(Math.abs(v))).length-1);s=String(parseFloat(v.toFixed(d)));if(s.length>maxc)s=v.toExponential(Math.max(0,maxc-6)).replace("e","E");}
+      else if(s.length>maxc&&nf)return "#".repeat(maxc);
+      return s;}
+    return String(v);
+  }
+  function paintCells(){
+    for(var r=0;r<ROWS;r++)for(var c=0;c<COLS;c++){
+      var k=A(c,r),e=cellEls[k],ce=cells[k],sp=e.firstChild,v=ce?valueAt(c,r):null;
+      var txt=ce?display(c,r):"";if(sp.textContent!==txt)sp.textContent=txt;
+      var st=e.style,fm=ce&&ce.fmt||{};
+      var al=fm.al||(isErr(v)||typeof v==="boolean"?"center":(typeof v==="number"?"right":"left"));
+      sp.style.textAlign=al;
+      st.fontWeight=fm.b?"700":"400";st.fontStyle=fm.i?"italic":"normal";sp.style.textDecoration=fm.u?"underline":"none";
+      st.background=fm.bg||"";st.color=fm.fc||"";
+    }
+    paintFilterBtns();
+  }
+  function snapshot(){return JSON.stringify({cells:cells,cw:cw,filt:{on:filt.on,crit:filt.crit,region:filt.region},hidden:hidden});}
+  function restore(s){var o=JSON.parse(s);cells={};Object.keys(o.cells).forEach(function(k){var x=o.cells[k];cells[k]=x;});cw=o.cw;hidden=o.hidden||{};filt={on:o.filt.on,crit:o.filt.crit||{},region:o.filt.region};cv={};recalc();layout();paintCells();paintSel();}
+  function pushUndo(){undo.push(snapshot());if(undo.length>60)undo.shift();redo.length=0;updUR();}
+  function updUR(){var u=root.querySelector('[data-c="undo"]'),r=root.querySelector('[data-c="redo"]');if(u)u.disabled=!undo.length;if(r)r.disabled=!redo.length;}
+  function doUndo(){if(!undo.length)return;cancelEdit();redo.push(snapshot());restore(undo.pop());updUR();emit();}
+  function doRedo(){if(!redo.length)return;cancelEdit();undo.push(snapshot());restore(redo.pop());updUR();emit();}
+  function changed(){recalc();paintCells();paintSel();emit();}
+
+  /* ---- selection painting ---- */
+  function rangeOf(){return {c0:Math.min(sel.a.c,sel.f.c),r0:Math.min(sel.a.r,sel.f.r),c1:Math.max(sel.a.c,sel.f.c),r1:Math.max(sel.a.r,sel.f.r)};}
+  function rectOf(c0,r0,c1,r1){return {l:xs[c0],t:ys[r0],w:xs[c1+1]-xs[c0],h:ys[r1+1]-ys[r0]};}
+  function place(e,rc,inset){e.style.left=(rc.l-(inset?1:0))+"px";e.style.top=(rc.t-(inset?1:0))+"px";e.style.width=(rc.w+(inset?1:0))+"px";e.style.height=(rc.h+(inset?1:0))+"px";}
+  function paintSel(){
+    var g=rangeOf(),multi=g.c0!==g.c1||g.r0!==g.r1;
+    var a=sel.a,ar=rectOf(a.c,a.r,a.c,a.r);
+    place(elActive,ar,true);elActive.style.display=(E&&E.mode!=="point")?"none":"block";
+    if(multi){place(elRange,rectOf(g.c0,g.r0,g.c1,g.r1),true);elRange.style.display="block";}else elRange.style.display="none";
+    var rr=rectOf(g.c0,g.r0,g.c1,g.r1);
+    elHandle.style.left=(rr.l+rr.w-5)+"px";elHandle.style.top=(rr.t+rr.h-5)+"px";elHandle.style.display=E?"none":"block";
+    hcEls.forEach(function(h,i){h.className="xl-hc"+(i>=g.c0&&i<=g.c1?" s":"");});
+    hrEls.forEach(function(h,i){h.className="xl-hr"+(i>=g.r0&&i<=g.r1?" s":"");});
+    if(!E){elName.value=multi?(A(g.c0,g.r0)+":"+A(g.c1,g.r1)):A(a.c,a.r);elFx.value=rawOf(a.c,a.r);}
+    if(clip){var cr=rectOf(clip.r.c0,clip.r.r0,clip.r.c1,clip.r.r1);place(elCopy,cr,true);elCopy.style.display="block";}else elCopy.style.display="none";
+    var nums=[],cnt=0;for(var r=g.r0;r<=g.r1;r++)for(var c=g.c0;c<=g.c1;c++){var v=valueAt(c,r);if(v!=null&&v!=="")cnt++;if(typeof v==="number")nums.push(v);}
+    if(multi&&nums.length){var s=nums.reduce(function(x,y){return x+y;},0);elSum.textContent="Average: "+fmtGeneral(+(s/nums.length).toPrecision(10))+"    Count: "+cnt+"    Sum: "+fmtGeneral(+s.toPrecision(12));}
+    else if(multi&&cnt)elSum.textContent="Count: "+cnt;else elSum.textContent="";
+    elMode.textContent=E?(E.mode==="point"?"Point":(E.mode==="edit"?"Edit":"Enter")):"Ready";
+    paintRefs();
+    scrollInto(a.c,a.r);
+  }
+  function scrollInto(c,r){
+    if(rangeMode&&dragging)return;
+    var l=xs[c],t=ys[r],w=xs[c+1]-l,h=ys[r+1]-t,sl=elScroll.scrollLeft,st=elScroll.scrollTop,vw=elScroll.clientWidth,vh=elScroll.clientHeight;
+    if(l<sl)elScroll.scrollLeft=l;else if(l+w>sl+vw)elScroll.scrollLeft=l+w-vw+4;
+    if(t<st)elScroll.scrollTop=t;else if(t+h>st+vh)elScroll.scrollTop=t+h-vh+4;
+  }
+  elScroll.addEventListener("scroll",function(){elColh.style.transform="translateX("+(-elScroll.scrollLeft)+"px)";elRowh.style.transform="translateY("+(-elScroll.scrollTop)+"px)";closeMenus();});
+  var REFCOL=["#4472c4","#e0453a","#8e44ad","#2e9e5b","#e08a1e","#17a2b8"];
+  function paintRefs(){
+    refEls.forEach(function(e){if(e.parentNode)e.parentNode.removeChild(e);});refEls=[];
+    if(!E||E.text[0]!=="=")return;
+    var re=/\$?([A-Z]{1,3})\$?(\d+)(?::\$?([A-Z]{1,3})\$?(\d+))?(?![A-Za-z0-9_(])/g,m,i=0,txt=E.text.toUpperCase();
+    while((m=re.exec(txt))){
+      var pre=txt[m.index-1];if(pre&&/[A-Z_.]/.test(pre))continue;
+      var c0=colIndex(m[1]),r0=+m[2]-1,c1=m[3]?colIndex(m[3]):c0,r1=m[4]?+m[4]-1:r0;
+      if(c0>=COLS||c1>=COLS||r0>=ROWS||r1>=ROWS)continue;
+      var rc=rectOf(Math.min(c0,c1),Math.min(r0,r1),Math.max(c0,c1),Math.max(r0,r1)),d=div("xl-ref");d.style.borderColor=REFCOL[i%REFCOL.length];place(d,rc,true);elSheet.appendChild(d);refEls.push(d);i++;
+    }
+  }
+
+  /* ---- selection ops ---- */
+  function setSel(a,f,noPaint){sel.a={c:cl(a.c,0,COLS-1),r:cl(a.r,0,ROWS-1)};sel.f=f?{c:cl(f.c,0,COLS-1),r:cl(f.r,0,ROWS-1)}:{c:sel.a.c,r:sel.a.r};if(!noPaint)paintSel();}
+  function cl(x,a,b){return x<a?a:x>b?b:x;}
+  function visRow(r,dir){while(r>=0&&r<ROWS&&hidden[r])r+=dir;return cl(r,0,ROWS-1);}
+
+  /* ---- editing ---- */
+  function startEdit(init,mode,fromBar){
+    if(E)return;
+    var a=sel.a;
+    E={text:init!=null?init:rawOf(a.c,a.r),mode:mode||"enter",from:fromBar?"bar":"cell",origin:{c:a.c,r:a.r},pr:null};
+    elEdit.style.display="block";var rc=rectOf(a.c,a.r,a.c,a.r);
+    elEdit.style.left=(rc.l-1)+"px";elEdit.style.top=(rc.t-1)+"px";elEdit.style.height=(rc.h+1)+"px";elEdit.style.fontSize=Math.max(16,14.67*Z)+"px";
+    elEdit.value=E.text;sizeEdit();
+    if(fromBar){elFx.focus();}else{elEdit.focus();try{elEdit.setSelectionRange(E.text.length,E.text.length);}catch(e){}}
+    elFx.value=E.text;paintSel();updAC();
+  }
+  function sizeEdit(){
+    var w=Math.max(colW(sel.a.c),Math.min(elSheet.clientWidth-xs[sel.a.c],(elEdit.value.length+2)*8.2*Z));
+    elEdit.style.width=w+"px";
+  }
+  function syncEdit(from){
+    var v=from==="bar"?elFx.value:elEdit.value;E.text=v;if(from==="bar")elEdit.value=v;else elFx.value=v;E.pr=null;
+    if(E.mode==="enter"&&E.touched)E.mode="enter";sizeEdit();paintSel();updAC();
+  }
+  function commitEdit(move){
+    if(!E)return;var o=E.origin,txt=E.text;E=null;elEdit.style.display="none";closeAC();
+    if(txt[0]==="="){var open=(txt.match(/\(/g)||[]).length-(txt.match(/\)/g)||[]).length;if(open>0)txt+=new Array(open+1).join(")");}
+    if(txt!==rawOf(o.c,o.r)){pushUndo();setRaw(o.c,o.r,txt);
+      if(txt[0]==="="){try{parse(tokenize(txt.slice(1)));}catch(ex){var good=false;}}
+      recalc();}
+    root.focus();
+    sel.a={c:o.c,r:o.r};sel.f={c:o.c,r:o.r};
+    if(move==="down"){var nr=visRow(o.r+1,1);setSel({c:o.c,r:nr});}else if(move==="up"){setSel({c:o.c,r:visRow(o.r-1,-1)});}else if(move==="right"){setSel({c:o.c+1,r:o.r});}else if(move==="left"){setSel({c:o.c-1,r:o.r});}
+    paintCells();paintSel();emit();
+  }
+  function cancelEdit(){if(!E)return;var o=E.origin;E=null;elEdit.style.display="none";closeAC();sel.a={c:o.c,r:o.r};sel.f={c:o.c,r:o.r};root.focus();paintSel();}
+  function pointOk(){
+    if(!E||E.text[0]!=="=")return false;
+    var inp=E.from==="bar"?elFx:elEdit;var pos=inp.selectionStart==null?E.text.length:inp.selectionStart;
+    var before=E.text.slice(0,pos).replace(/\s+$/,"");var ch=before.slice(-1);
+    if(E.pr&&pos===E.pr.end)return true;
+    return before.length>0&&/[=+\-*\/^&<>(,:]/.test(ch);
+  }
+  function insertRef(txt){
+    var inp=E.from==="bar"?elFx:elEdit,pos=inp.selectionStart==null?E.text.length:inp.selectionStart,s,e;
+    if(E.pr&&pos===E.pr.end){s=E.pr.start;e=E.pr.end;}else{s=pos;e=pos;}
+    E.text=E.text.slice(0,s)+txt+E.text.slice(e);E.pr={start:s,end:s+txt.length};E.mode="point";
+    elEdit.value=E.text;elFx.value=E.text;
+    var np=s+txt.length;(E.from==="bar"?elFx:elEdit).focus();try{(E.from==="bar"?elFx:elEdit).setSelectionRange(np,np);}catch(x){}
+    sizeEdit();paintSel();
+  }
+  /* ---- autocomplete ---- */
+  var acEl=null,acTip=null,acIdx=0,acList=[];
+  function closeAC(){if(acEl&&acEl.parentNode)acEl.parentNode.removeChild(acEl);if(acTip&&acTip.parentNode)acTip.parentNode.removeChild(acTip);acEl=null;acTip=null;acList=[];}
+  function updAC(){
+    closeAC();if(!E||E.text[0]!=="=")return;
+    var inp=E.from==="bar"?elFx:elEdit,pos=inp.selectionStart==null?E.text.length:inp.selectionStart,before=E.text.slice(0,pos);
+    var m=/([A-Za-z][A-Za-z0-9.]*)$/.exec(before);
+    var rc=rectOf(sel.a.c,sel.a.r,sel.a.c,sel.a.r);
+    if(m&&!/^[A-Za-z]{1,3}\d/.test(m[1])&&!/[A-Za-z]\d+$/.test(m[1])){
+      var q=m[1].toUpperCase();acList=FN_NAMES.filter(function(n){return n.indexOf(q)===0;}).slice(0,8);
+      if(acList.length){acIdx=0;acEl=div("xl-ac");acList.forEach(function(n,i){var d=document.createElement("div");d.innerHTML="<i>fx</i><span>"+n+"</span>";if(i===0)d.className="on";d.addEventListener("pointerdown",function(ev){ev.preventDefault();acIdx=i;acceptAC();});acEl.appendChild(d);});
+        acEl.style.left=(rc.l+HEAD_W-elScroll.scrollLeft)+"px";acEl.style.top=(rc.t+rc.h+20+ 34+32+92+30+2-elScroll.scrollTop)+"px";
+        positionOverlay(acEl,rc);root.appendChild(acEl);return;}
+    }
+    /* signature tooltip */
+    var depth=0,i=before.length-1,end=-1;for(;i>=0;i--){var ch=before[i];if(ch===")")depth++;else if(ch==="("){if(depth===0){end=i;break;}depth--;}}
+    if(end>0){var nm=/([A-Za-z][A-Za-z0-9.]*)$/.exec(before.slice(0,end));if(nm&&FN_SIG[nm[1].toUpperCase()]){
+      var sig=FN_SIG[nm[1].toUpperCase()],args=before.slice(end+1),ai=0,d2=0;for(var k=0;k<args.length;k++){if(args[k]==="(")d2++;else if(args[k]===")")d2--;else if(args[k]===","&&d2===0)ai++;}
+      var inner=/\((.*)\)/.exec(sig)[1].split(", "),html=sig.split("(")[0]+"(";inner.forEach(function(p,j){var b=j===Math.min(ai,inner.length-1);html+=(j?", ":"")+(b?"<b>"+esc(p)+"</b>":esc(p));});html+=")";
+      acTip=div("xl-tip");acTip.innerHTML=html;positionOverlay(acTip,rc);root.appendChild(acTip);}}
+  }
+  function positionOverlay(el2,rc){
+    var b=$(".xl-body").getBoundingClientRect(),h=root.getBoundingClientRect();
+    el2.style.left=Math.min(b.left-h.left+HEAD_W+rc.l-elScroll.scrollLeft,h.width-190)+"px";
+    el2.style.top=(b.top-h.top+20+rc.t+rc.h-elScroll.scrollTop+2)+"px";
+  }
+  function acceptAC(){
+    if(!acList.length)return;var name=acList[acIdx],inp=E.from==="bar"?elFx:elEdit,pos=inp.selectionStart==null?E.text.length:inp.selectionStart;
+    var before=E.text.slice(0,pos),m=/([A-Za-z][A-Za-z0-9.]*)$/.exec(before),s=pos-m[1].length;
+    E.text=E.text.slice(0,s)+name+"("+E.text.slice(pos);elEdit.value=E.text;elFx.value=E.text;var np=s+name.length+1;inp.focus();try{inp.setSelectionRange(np,np);}catch(x){}
+    sizeEdit();paintSel();updAC();
+  }
+
+  /* ---- clipboard ---- */
+  function copyRange(cut){
+    var g=rangeOf(),data=[];
+    for(var r=g.r0;r<=g.r1;r++){var row=[];for(var c=g.c0;c<=g.c1;c++){var ce=cells[A(c,r)];row.push(ce?JSON.parse(JSON.stringify(ce)):null);}data.push(row);}
+    clip={r:g,data:data,cut:!!cut,c0:g.c0,r0:g.r0};
+    var tsv=[];for(var r2=g.r0;r2<=g.r1;r2++){var cols=[];for(var c2=g.c0;c2<=g.c1;c2++)cols.push(display(c2,r2));tsv.push(cols.join("\t"));}
+    try{if(navigator.clipboard)navigator.clipboard.writeText(tsv.join("\n")).catch(function(){});}catch(e){}
+    paintSel();
+  }
+  function pasteAt(){
+    if(!clip){toast("Nothing copied yet. Select cells and press Ctrl+C.");return;}
+    pushUndo();var a=rangeOf(),dc=a.c0-clip.c0,dr=a.r0-clip.r0;
+    for(var r=0;r<clip.data.length;r++)for(var c=0;c<clip.data[r].length;c++){
+      var tc=a.c0+c,tr=a.r0+r;if(tc>=COLS||tr>=ROWS)continue;var src=clip.data[r][c];
+      if(!src)delete cells[A(tc,tr)];else{var n=JSON.parse(JSON.stringify(src));delete n.ast;if(n.f)n.f=shiftFormula(n.f,dc,dr);cells[A(tc,tr)]=n;}
+    }
+    if(clip.cut){for(var r2=clip.r.r0;r2<=clip.r.r1;r2++)for(var c2=clip.r.c0;c2<=clip.r.c1;c2++){var inside=c2>=a.c0&&c2<a.c0+clip.data[0].length&&r2>=a.r0&&r2<a.r0+clip.data.length;if(!inside)delete cells[A(c2,r2)];}clip=null;}
+    setSel({c:a.c0,r:a.r0},{c:Math.min(COLS-1,a.c0+clip_w()-1),r:Math.min(ROWS-1,a.r0+clip_h()-1)},true);changed();
+  }
+  var lastW=1,lastH=1;
+  function clip_w(){return clip?clip.data[0].length:lastW;}function clip_h(){return clip?clip.data.length:lastH;}
+  var _pasteOrig=pasteAt;pasteAt=function(){if(clip){lastW=clip.data[0].length;lastH=clip.data.length;}_pasteOrig();};
+  function clearRange(what){
+    pushUndo();var g=rangeOf();
+    for(var r=g.r0;r<=g.r1;r++)for(var c=g.c0;c<=g.c1;c++){var k=A(c,r),ce=cells[k];if(!ce)continue;
+      if(what==="all")delete cells[k];else if(what==="fmt"){delete ce.fmt;}else{if(ce.fmt)cells[k]={v:null,fmt:ce.fmt};else delete cells[k];}}
+    changed();
+  }
+  /* ---- fill ---- */
+  function fillTo(src,dst){
+    pushUndo();
+    var vertical=(dst.r1>src.r1||dst.r0<src.r0),horizontal=(dst.c1>src.c1||dst.c0<src.c0);
+    var h=src.r1-src.r0+1,w=src.c1-src.c0+1;
+    function series(vals){if(vals.length<2)return null;var d=vals[1]-vals[0];for(var i=1;i<vals.length;i++)if(vals[i]-vals[i-1]!==d)return null;return d;}
+    if(vertical){
+      for(var c=src.c0;c<=src.c1;c++){
+        var nums=[],ok=true;for(var r=src.r0;r<=src.r1;r++){var ce=cells[A(c,r)];if(ce&&!ce.f&&typeof ce.v==="number")nums.push(ce.v);else ok=false;}
+        var step=ok?series(nums):null;
+        for(var r2=dst.r0;r2<=dst.r1;r2++){if(r2>=src.r0&&r2<=src.r1)continue;
+          var off=(r2-src.r0)%h;if(off<0)off+=h;var sr=src.r0+off,sc=cells[A(c,sr)];
+          if(step!=null){var idx=r2>src.r1?(r2-src.r0):(r2-src.r1);var base=r2>src.r1?nums[0]:nums[nums.length-1];var val=r2>src.r1?nums[0]+step*(r2-src.r0):nums[nums.length-1]+step*(r2-src.r1);cells[A(c,r2)]={v:val};}
+          else if(!sc)delete cells[A(c,r2)];else{var n=JSON.parse(JSON.stringify(sc));delete n.ast;if(n.f)n.f=shiftFormula(n.f,0,r2-sr);cells[A(c,r2)]=n;}}
+      }
+    }else if(horizontal){
+      for(var r3=src.r0;r3<=src.r1;r3++){
+        for(var c2=dst.c0;c2<=dst.c1;c2++){if(c2>=src.c0&&c2<=src.c1)continue;
+          var off2=(c2-src.c0)%w;if(off2<0)off2+=w;var sc2=src.c0+off2,s2=cells[A(sc2,r3)];
+          if(!s2)delete cells[A(c2,r3)];else{var n2=JSON.parse(JSON.stringify(s2));delete n2.ast;if(n2.f)n2.f=shiftFormula(n2.f,c2-sc2,0);cells[A(c2,r3)]=n2;}}
+      }
+    }
+    sel.a={c:dst.c0,r:dst.r0};sel.f={c:dst.c1,r:dst.r1};changed();
+  }
+  function fillDown(){var g=rangeOf();if(g.r0===g.r1){toast("Select the cell with the formula and the cells below it, then press Ctrl+D.");return;}fillTo({c0:g.c0,r0:g.r0,c1:g.c1,r1:g.r0},g);}
+
+  /* ---- region helpers ---- */
+  function nonEmpty(c,r){var ce=cells[A(c,r)];return ce&&(ce.f||(ce.v!=null&&ce.v!==""));}
+  function currentRegion(c,r){
+    var c0=c,c1=c,r0=r,r1=r,grew=true;if(!nonEmpty(c,r)){/* look for neighbours */var found=false;[[0,-1],[-1,0],[1,0],[0,1]].forEach(function(d){if(!found&&c+d[0]>=0&&r+d[1]>=0&&nonEmpty(c+d[0],r+d[1])){c=c+d[0];r=r+d[1];c0=c1=c;r0=r1=r;found=true;}});if(!found)return null;}
+    while(grew){grew=false;
+      for(var rr=r0-1;rr<=r1+1;rr++)for(var cc=c0-1;cc<=c1+1;cc++){if(cc<0||rr<0||cc>=COLS||rr>=ROWS)continue;if(nonEmpty(cc,rr)){if(cc<c0){c0=cc;grew=true;}if(cc>c1){c1=cc;grew=true;}if(rr<r0){r0=rr;grew=true;}if(rr>r1){r1=rr;grew=true;}}}
+    }
+    return {c0:c0,r0:r0,c1:c1,r1:r1};
+  }
+  function targetRegion(){var g=rangeOf();if(g.c0===g.c1&&g.r0===g.r1)return currentRegion(g.c0,g.r0);return g;}
+  function hasHeader(rg){
+    var allText=true,anyNum=false;for(var c=rg.c0;c<=rg.c1;c++){var v=valueAt(c,rg.r0);if(typeof v!=="string"||!v)allText=false;}
+    for(var r=rg.r0+1;r<=rg.r1;r++)for(var c2=rg.c0;c2<=rg.c1;c2++){if(typeof valueAt(c2,r)==="number")anyNum=true;}
+    return allText&&(anyNum||rg.r1>rg.r0);
+  }
+  function sortRegion(asc,colAbs){
+    var rg=targetRegion();if(!rg){toast("Click a cell inside your data first.");return;}
+    var hd=hasHeader(rg),r0=rg.r0+(hd?1:0);if(r0>=rg.r1){return;}
+    var col=colAbs!=null?colAbs:sel.a.c;if(col<rg.c0||col>rg.c1)col=rg.c0;
+    pushUndo();var rows=[];for(var r=r0;r<=rg.r1;r++){var row=[];for(var c=rg.c0;c<=rg.c1;c++)row.push(cells[A(c,r)]||null);rows.push({row:row,k:valueAt(col,r),i:r});}
+    function rank(v){return v==null||v===""?3:(typeof v==="number"?0:(typeof v==="boolean"?2:1));}
+    rows.sort(function(a,b){var ra=rank(a.k),rb=rank(b.k);if(ra===3&&rb===3)return a.i-b.i;if(ra===3)return 1;if(rb===3)return -1;if(ra!==rb)return asc?ra-rb:rb-ra;var x=a.k,y=b.k;if(typeof x==="string"){x=x.toLowerCase();y=String(y).toLowerCase();}var d=x<y?-1:(x>y?1:0);return d?(asc?d:-d):a.i-b.i;});
+    rows.forEach(function(o,i){for(var c=rg.c0;c<=rg.c1;c++){var ce=o.row[c-rg.c0];if(ce)cells[A(c,r0+i)]=ce;else delete cells[A(c,r0+i)];}});
+    changed();
+  }
+  /* ---- dialogs ---- */
+  var dlg=null;
+  function closeDlg(){if(dlg&&dlg.parentNode)dlg.parentNode.removeChild(dlg);dlg=null;}
+  function openDialog(html,onmount){closeDlg();closeMenus();dlg=div("xl-dlg");dlg.innerHTML=html;root.appendChild(dlg);dlg.addEventListener("keydown",function(e){e.stopPropagation();if(e.key==="Escape")closeDlg();});if(onmount)onmount(dlg);return dlg;}
+  function findDialog(replace){
+    openDialog('<div class="h"><span>Find and Replace</span><button data-d="close" aria-label="Close" style="border:0;background:none">✕</button></div><div class="bd"><label style="display:block">Find what:<input type="text" id="xf" autocomplete="off"></label>'+(replace?'<label style="display:block">Replace with:<input type="text" id="xr" autocomplete="off"></label>':'')+'<label><input type="checkbox" id="xmc"> Match case</label><label><input type="checkbox" id="xme"> Match entire cell contents</label><div class="msg" id="xm"></div></div><div class="ft">'+(replace?'<button data-d="repl">Replace</button><button data-d="replall" class="pri">Replace All</button>':'')+'<button data-d="next" class="pri">Find Next</button><button data-d="close">Close</button></div>',function(d){
+      var f=d.querySelector("#xf"),rp=d.querySelector("#xr"),mc=d.querySelector("#xmc"),me=d.querySelector("#xme"),msg=d.querySelector("#xm");
+      mc.checked=findOpt.mc;me.checked=findOpt.me;
+      function opts(){findOpt.mc=mc.checked;findOpt.me=me.checked;}
+      function text(c,r){var ce=cells[A(c,r)];if(!ce)return null;if(ce.f)return ce.f;return rawOf(c,r);}
+      function match(t){if(t==null||t==="")return false;var a=findOpt.mc?t:t.toLowerCase(),b=findOpt.mc?f.value:f.value.toLowerCase();return findOpt.me?a===b:a.indexOf(b)>-1;}
+      function next(){opts();if(!f.value){msg.textContent="Type what to find.";return false;}var n=ROWS*COLS,start=sel.a.r*COLS+sel.a.c;for(var i=1;i<=n;i++){var idx=(start+i)%n,r=Math.floor(idx/COLS),c=idx%COLS;if(match(text(c,r))){setSel({c:c,r:r});msg.textContent="Found in "+A(c,r);return true;}}msg.textContent="We couldn't find what you were searching for.";return false;}
+      function repText(t){var flags=findOpt.mc?"g":"gi";if(findOpt.me)return rp.value;var re=new RegExp(f.value.replace(/[.*+?^${}()|[\]\\]/g,"\\$&"),flags);return t.replace(re,function(){return rp.value;});}
+      function replaceCell(c,r){var t=text(c,r);if(!match(t))return false;var nt=repText(t);setRaw(c,r,nt);return true;}
+      d.addEventListener("click",function(e){var b=e.target.closest("[data-d]");if(!b)return;var k=b.getAttribute("data-d");
+        if(k==="close")closeDlg();else if(k==="next")next();
+        else if(k==="repl"){opts();if(!f.value){msg.textContent="Type what to find.";return;}pushUndo();if(!replaceCell(sel.a.c,sel.a.r)){undo.pop();next();return;}recalc();paintCells();emit();next();}
+        else if(k==="replall"){opts();if(!f.value){msg.textContent="Type what to find.";return;}pushUndo();var cnt=0;for(var r=0;r<ROWS;r++)for(var c=0;c<COLS;c++){if(replaceCell(c,r))cnt++;}if(!cnt){undo.pop();msg.textContent="We couldn't find anything to replace.";return;}changed();msg.textContent="All done. We made "+cnt+" replacement"+(cnt>1?"s":"")+".";}
+      });
+      f.addEventListener("keydown",function(e){if(e.key==="Enter")next();});
+      setTimeout(function(){f.focus();},30);
+    });
+  }
+  function dedupeDialog(){
+    var rg=targetRegion();if(!rg){toast("Click a cell inside your data first.");return;}
+    var hd=hasHeader(rg),cols="";for(var c=rg.c0;c<=rg.c1;c++)cols+='<label><input type="checkbox" class="xcol" data-c="'+c+'" checked> '+(hd?esc(display(c,rg.r0)):"Column "+colName(c))+'</label>';
+    openDialog('<div class="h"><span>Remove Duplicates</span><button data-d="close" aria-label="Close" style="border:0;background:none">✕</button></div><div class="bd"><div>Data range: '+A(rg.c0,rg.r0)+':'+A(rg.c1,rg.r1)+'</div><label><input type="checkbox" id="xhd" '+(hd?"checked":"")+'> My data has headers</label><div style="font-weight:600">Columns</div><div style="max-height:130px;overflow:auto">'+cols+'</div><div class="msg" id="xm"></div></div><div class="ft"><button data-d="ok" class="pri">OK</button><button data-d="close">Cancel</button></div>',function(d){
+      d.addEventListener("click",function(e){var b=e.target.closest("[data-d]");if(!b)return;var k=b.getAttribute("data-d");if(k==="close"){closeDlg();return;}
+        if(k==="ok"){var useH=d.querySelector("#xhd").checked,sc=[].slice.call(d.querySelectorAll(".xcol")).filter(function(x){return x.checked;}).map(function(x){return +x.getAttribute("data-c");});
+          if(!sc.length){d.querySelector("#xm").textContent="Select at least one column.";return;}
+          pushUndo();var r0=rg.r0+(useH?1:0),seen={},keep=[],removed=0;
+          for(var r=r0;r<=rg.r1;r++){var key=sc.map(function(c){return display(c,r).toLowerCase();}).join("\u0001");if(seen[key]){removed++;}else{seen[key]=1;var row=[];for(var c2=rg.c0;c2<=rg.c1;c2++)row.push(cells[A(c2,r)]||null);keep.push(row);}}
+          if(!removed){undo.pop();d.querySelector("#xm").textContent="No duplicate values found.";return;}
+          for(var r2=r0;r2<=rg.r1;r2++)for(var c3=rg.c0;c3<=rg.c1;c3++)delete cells[A(c3,r2)];
+          keep.forEach(function(row,i){row.forEach(function(ce,j){if(ce)cells[A(rg.c0+j,r0+i)]=ce;});});
+          changed();closeDlg();toast(removed+" duplicate value"+(removed>1?"s":"")+" found and removed; "+keep.length+" unique value"+(keep.length>1?"s":"")+" remain.");
+        }});
+    });
+  }
+  /* ---- filter ---- */
+  function paintFilterBtns(){
+    root.querySelectorAll(".xl-ff").forEach(function(b){b.parentNode.removeChild(b);});
+    if(!filt.on||!filt.region)return;var rg=filt.region;
+    for(var c=rg.c0;c<=rg.c1;c++){var e=cellEls[A(c,rg.r0)];var b=document.createElement("button");b.className="xl-ff";b.setAttribute("data-fc",c);b.textContent="▼";b.setAttribute("aria-label","Filter "+display(c,rg.r0));if(filt.crit[c])b.style.background="#cfe3d8";e.appendChild(b);}
+  }
+  function toggleFilter(){
+    if(filt.on){clearFilter(true);filt={on:false,crit:{},region:null};hidden={};layout();paintCells();return;}
+    var rg=targetRegion();if(!rg){toast("Click a cell inside your data first.");return;}
+    filt={on:true,crit:{},region:rg};paintCells();
+  }
+  function applyFilter(){
+    hidden={};var rg=filt.region;if(!rg)return;
+    for(var r=rg.r0+1;r<=rg.r1;r++){for(var c in filt.crit){if(filt.crit[c]&&filt.crit[c].indexOf(display(+c,r))<0){hidden[r]=true;break;}}}
+    layout();paintCells();paintSel();
+  }
+  function clearFilter(keepOn){filt.crit={};hidden={};if(!keepOn){}layout();paintCells();}
+  function filterMenu(c,anchor){
+    var rg=filt.region,vals=[];for(var r=rg.r0+1;r<=rg.r1;r++){var v=display(c,r);if(vals.indexOf(v)<0)vals.push(v);}vals.sort();
+    var cur=filt.crit[c];
+    var html='<div class="h"><span>Filter: '+esc(display(c,rg.r0))+'</span><button data-d="close" style="border:0;background:none" aria-label="Close">✕</button></div><div class="bd"><div style="display:flex;gap:6px"><button data-d="sort-a" class="xl-b" style="border:1px solid #aaa">Sort A→Z</button><button data-d="sort-z" class="xl-b" style="border:1px solid #aaa">Sort Z→A</button></div><div style="max-height:170px;overflow:auto;border:1px solid #ccc;background:#fff;padding:4px 8px">'+vals.map(function(v){return '<label><input type="checkbox" class="xv" value="'+esc(v)+'" '+((!cur||cur.indexOf(v)>-1)?"checked":"")+'> '+(v===""?"(Blanks)":esc(v))+'</label>';}).join("")+'</div></div><div class="ft"><button data-d="ok" class="pri">OK</button><button data-d="clr">Clear filter</button><button data-d="close">Cancel</button></div>';
+    openDialog(html,function(d){d.addEventListener("click",function(e){var b=e.target.closest("[data-d]");if(!b)return;var k=b.getAttribute("data-d");
+      if(k==="close")closeDlg();
+      else if(k==="sort-a"||k==="sort-z"){closeDlg();sortRegion(k==="sort-a",c);}
+      else if(k==="clr"){delete filt.crit[c];closeDlg();applyFilter();emit();}
+      else if(k==="ok"){var chk=[].slice.call(d.querySelectorAll(".xv")),on=chk.filter(function(x){return x.checked;}).map(function(x){return x.value;});if(on.length===chk.length)delete filt.crit[c];else filt.crit[c]=on;closeDlg();applyFilter();emit();}
+    });});
+  }
+  /* ---- menus ---- */
+  var menu=null;
+  function closeMenus(){if(menu&&menu.parentNode)menu.parentNode.removeChild(menu);menu=null;}
+  function showMenu(items,x,y){
+    closeMenus();menu=div("xl-menu");
+    items.forEach(function(it){if(it==="-"){menu.appendChild(document.createElement("hr"));return;}var b=document.createElement("button");b.textContent=it.t;if(it.dis)b.className="dis";b.addEventListener("pointerdown",function(e){e.preventDefault();});b.addEventListener("click",function(){closeMenus();if(it.dis){toast("Not in this lesson. You'll use it in a later lesson.");return;}it.f();});menu.appendChild(b);});
+    root.appendChild(menu);var rr=root.getBoundingClientRect();menu.style.left=Math.max(4,Math.min(x-rr.left,rr.width-menu.offsetWidth-4))+"px";menu.style.top=Math.max(4,Math.min(y-rr.top,rr.height-menu.offsetHeight-4))+"px";
+  }
+  function insertRows(){pushUndo();var g=rangeOf(),n=g.r1-g.r0+1;for(var r=ROWS-1;r>=g.r0+n;r--)for(var c=0;c<COLS;c++){var s=cells[A(c,r-n)];if(s)cells[A(c,r)]=s;else delete cells[A(c,r)];}for(var r2=g.r0;r2<g.r0+n;r2++)for(var c2=0;c2<COLS;c2++)delete cells[A(c2,r2)];changed();toast("Row inserted. Formulas are not adjusted in this practice sheet.");}
+  function deleteRows(){pushUndo();var g=rangeOf(),n=g.r1-g.r0+1;for(var r=g.r0;r<ROWS;r++)for(var c=0;c<COLS;c++){var s=cells[A(c,r+n)];if(r+n<ROWS&&s)cells[A(c,r)]=s;else delete cells[A(c,r)];}changed();}
+  function insertCols(){pushUndo();var g=rangeOf(),n=g.c1-g.c0+1;for(var c=COLS-1;c>=g.c0+n;c--)for(var r=0;r<ROWS;r++){var s=cells[A(c-n,r)];if(s)cells[A(c,r)]=s;else delete cells[A(c,r)];}for(var c2=g.c0;c2<g.c0+n;c2++)for(var r2=0;r2<ROWS;r2++)delete cells[A(c2,r2)];changed();}
+  function deleteCols(){pushUndo();var g=rangeOf(),n=g.c1-g.c0+1;for(var c=g.c0;c<COLS;c++)for(var r=0;r<ROWS;r++){var s=cells[A(c+n,r)];if(c+n<COLS&&s)cells[A(c,r)]=s;else delete cells[A(c,r)];}changed();}
+  function fmtSel(fn){pushUndo();var g=rangeOf();for(var r=g.r0;r<=g.r1;r++)for(var c=g.c0;c<=g.c1;c++){var k=A(c,r),ce=cells[k]||(cells[k]={v:null});ce.fmt=ce.fmt||{};fn(ce.fmt);}paintCells();paintSel();emit();}
+  function toggleFmt(key){var ce=cells[A(sel.a.c,sel.a.r)],on=ce&&ce.fmt&&ce.fmt[key];fmtSel(function(f){if(on)delete f[key];else f[key]=true;});}
+  function autoSum(){
+    var a=sel.a,r=a.r-1,c0=a.c,rs=-1;
+    var cnt=0;while(r>=0&&typeof valueAt(c0,r)==="number"){cnt++;r--;}
+    var f;
+    if(cnt>0){f="=SUM("+A(c0,a.r-cnt)+":"+A(c0,a.r-1)+")";}
+    else{var c=a.c-1,n2=0;while(c>=0&&typeof valueAt(c,a.r)==="number"){n2++;c--;}if(n2>0)f="=SUM("+A(a.c-n2,a.r)+":"+A(a.c-1,a.r)+")";else f="=SUM()";}
+    startEdit(f,"enter",false);if(f==="=SUM()"){try{elEdit.setSelectionRange(5,5);}catch(e){}}
+    toast("AutoSum suggests this formula. Press Enter to accept.");
+  }
+  function numFmtSet(nf){fmtSel(function(f){if(nf==="gen")delete f.nf;else f.nf=nf;});}
+  function setZoom(z){Z=Math.max(.6,Math.min(2.2,z));layout();paintCells();}
+
+  /* ---- ribbon ---- */
+  function dis(t){return "<button class='xl-b dis' data-na='1' title='Not in this lesson'>"+t+"</button>";}
+  function ribbonHTML(){
+    function B(c,ic,l,cls,title){return "<button class='xl-b "+(cls||"")+"' data-c='"+c+"' title='"+(title||l)+"' aria-label='"+(title||l)+"'><span class='ic'>"+ic+"</span>"+(l?"<span>"+l+"</span>":"")+"</button>";}
+    function G(rows,label,w){return "<div class='xl-grp'><div class='row'>"+rows+"</div><div class='gl'>"+label+"</div></div>";}
+    if(curTab==="Home")return G(B("paste","📋","Paste","big")+"<div class='xl-col'>"+B("cut","✂️","Cut")+B("copy","📄","Copy")+"</div>","Clipboard")+
+      G("<div class='xl-col'><div class='row'><select class='xl-sel' disabled style='width:92px'><option>Calibri</option></select><select class='xl-sel' disabled style='width:48px'><option>11</option></select></div><div class='row'>"+B("bold","<b>B</b>","","","Bold (Ctrl+B)")+B("italic","<i>I</i>","","","Italic (Ctrl+I)")+B("under","<u>U</u>","","","Underline (Ctrl+U)")+B("fill","🟨","","","Fill colour")+B("fcolor","<span style='color:#c00;font-weight:700'>A</span>","","","Font colour")+"</div></div>","Font")+
+      G("<div class='xl-col'><div class='row'>"+B("alL","⯇","","","Align left")+B("alC","≡","","","Center")+B("alR","⯈","","","Align right")+"</div><div class='row'>"+dis("Wrap")+dis("Merge")+"</div></div>","Alignment")+
+      G("<div class='xl-col'><select class='xl-sel' data-nf style='width:112px'><option value='gen'>General</option><option value='num'>Number</option><option value='cur'>Currency (₦)</option><option value='comma'>Comma</option><option value='pct'>Percentage</option></select><div class='row'>"+B("nfcur","₦","","","Currency")+B("nfpct","%","","","Percent")+B("nfcomma",",","","","Comma")+B("dec","⁺.0","","","Decimals")+"</div></div>","Number")+
+      G(dis("Conditional<br>Formatting")+dis("Format as<br>Table"),"Styles")+
+      G(B("insrow","➕","Insert","", "Insert")+B("delrow","➖","Delete","","Delete")+dis("Format"),"Cells")+
+      G("<div class='xl-col'><div class='row'>"+B("autosum","Σ","AutoSum","")+B("fillmenu","⬇️","Fill","")+B("clearmenu","🧽","Clear","")+"</div></div>"+B("sortmenu","🔃","Sort &<br>Filter","big")+B("findmenu","🔍","Find &<br>Select","big"),"Editing");
+    if(curTab==="Data")return G(dis("Get<br>Data")+dis("Refresh<br>All"),"Get & Transform")+G(B("sortaz","A↓Z","Sort A to Z","big")+B("sortza","Z↓A","Sort Z to A","big")+dis("Sort"),"Sort & Filter")+G(B("filter","🔽","Filter","big")+B("clearfilter","✖️","Clear","big"),"Filter")+G(B("dedupe","🗑️","Remove<br>Duplicates","big")+dis("Text to<br>Columns")+dis("Data<br>Validation"),"Data Tools");
+    if(curTab==="Formulas")return G(B("autosum","Σ","AutoSum","big")+B("fxlist","<i style='font-family:serif'>fx</i>","Insert<br>Function","big"),"Function Library")+G(dis("Recently<br>Used")+dis("Financial")+dis("Logical")+dis("Text"),"")+G(dis("Name<br>Manager")+dis("Trace<br>Precedents"),"Defined Names");
+    if(curTab==="View")return G(B("zin","🔍＋","Zoom In","big")+B("zout","🔍－","Zoom Out","big")+B("z100","100%","100%","big"),"Zoom")+G(dis("Freeze<br>Panes")+dis("Gridlines"),"Show");
+    return "<div style='padding:20px 16px;color:#666;font-size:13px'>This tab is not part of the lesson. In real Excel it sits here. We will use it in a later lesson.</div>";
+  }
+  function renderTabs(){
+    var all=["File","Home","Insert","Draw","Page Layout","Formulas","Data","Review","View","Help"];
+    elTabs.innerHTML="";all.forEach(function(t){var b=document.createElement("button");b.textContent=t;b.setAttribute("role","tab");var ok=tabsAllowed.indexOf(t)>-1;b.className=(t===curTab?"on":"")+(ok?"":" off");b.addEventListener("click",function(){if(!ok){toast("'"+t+"' is not in this lesson. It is in the same place in real Excel.");return;}curTab=t;renderTabs();renderRibbon();});elTabs.appendChild(b);});
+  }
+  function renderRibbon(){elRib.innerHTML=ribbonHTML();syncRibbon();}
+  function syncRibbon(){
+    var ce=cells[A(sel.a.c,sel.a.r)],fm=ce&&ce.fmt||{};
+    [["bold","b"],["italic","i"],["under","u"]].forEach(function(p){var b=elRib.querySelector('[data-c="'+p[0]+'"]');if(b)b.classList.toggle("on",!!fm[p[1]]);});
+    var s=elRib.querySelector("[data-nf]");if(s)s.value=fm.nf||"gen";
+  }
+  var CMD={
+    paste:pasteAt,cut:function(){copyRange(true);},copy:function(){copyRange(false);},
+    bold:function(){toggleFmt("b");},italic:function(){toggleFmt("i");},under:function(){toggleFmt("u");},
+    fill:function(){var ce=cells[A(sel.a.c,sel.a.r)],on=ce&&ce.fmt&&ce.fmt.bg;fmtSel(function(f){if(on)delete f.bg;else f.bg="#ffff00";});},
+    fcolor:function(){var ce=cells[A(sel.a.c,sel.a.r)],on=ce&&ce.fmt&&ce.fmt.fc;fmtSel(function(f){if(on)delete f.fc;else f.fc="#c00000";});},
+    alL:function(){fmtSel(function(f){f.al="left";});},alC:function(){fmtSel(function(f){f.al="center";});},alR:function(){fmtSel(function(f){f.al="right";});},
+    nfcur:function(){numFmtSet("cur");},nfpct:function(){numFmtSet("pct");},nfcomma:function(){numFmtSet("comma");},dec:function(){numFmtSet("dec1");},
+    autosum:autoSum,undo:doUndo,redo:doRedo,save:function(){toast("Saved in your browser. This practice file keeps your work automatically.");},
+    cancel:function(){cancelEdit();},enter:function(){if(E)commitEdit("down");},
+    zin:function(){setZoom(Z+.1);},zout:function(){setZoom(Z-.1);},z100:function(){setZoom(1);},
+    sortaz:function(){sortRegion(true);},sortza:function(){sortRegion(false);},filter:toggleFilter,clearfilter:function(){if(filt.on){filt.crit={};applyFilter();emit();}},dedupe:dedupeDialog,
+    newsheet:function(){toast("One sheet is enough for this lesson.");},
+    rangemode:function(){rangeMode=!rangeMode;var b=root.querySelector('[data-c="rangemode"]');b.classList.toggle("on",rangeMode);elScroll.style.touchAction=rangeMode?"none":"auto";toast(rangeMode?"Range mode ON. Drag on the cells to select a range.":"Range mode off. Dragging scrolls the sheet.");},
+    fxlist:function(){if(!E)startEdit("=","enter",false);}
+  };
+  function menuFor(cmd,btn){
+    var r=btn.getBoundingClientRect(),x=r.left,y=r.bottom;
+    if(cmd==="insrow")showMenu([{t:"Insert Sheet Rows",f:insertRows},{t:"Insert Sheet Columns",f:insertCols}],x,y);
+    else if(cmd==="delrow")showMenu([{t:"Delete Sheet Rows",f:deleteRows},{t:"Delete Sheet Columns",f:deleteCols}],x,y);
+    else if(cmd==="fillmenu")showMenu([{t:"Down (Ctrl+D)",f:fillDown}],x,y);
+    else if(cmd==="clearmenu")showMenu([{t:"Clear All",f:function(){clearRange("all");}},{t:"Clear Formats",f:function(){clearRange("fmt");}},{t:"Clear Contents (Delete)",f:function(){clearRange("c");}}],x,y);
+    else if(cmd==="sortmenu")showMenu([{t:"Sort A to Z",f:function(){sortRegion(true);}},{t:"Sort Z to A  (largest to smallest)",f:function(){sortRegion(false);}},"-",{t:filt.on?"Clear Filter":"Filter",f:toggleFilter}],x,y);
+    else if(cmd==="findmenu")showMenu([{t:"Find...  (Ctrl+F)",f:function(){findDialog(false);}},{t:"Replace...  (Ctrl+H)",f:function(){findDialog(true);}},"-",{t:"Go To...",dis:true}],x,y);
+  }
+  elRib.addEventListener("pointerdown",function(e){var b=e.target.closest("button");if(b&&!/SELECT|INPUT/.test(e.target.tagName)&&E&&E.mode!=="enter0")e.preventDefault();});
+  elRib.addEventListener("click",function(e){
+    var b=e.target.closest("button");if(!b)return;
+    if(b.getAttribute("data-na")){toast("Not in this lesson. You'll use it in a later lesson.");return;}
+    var c=b.getAttribute("data-c");if(!c)return;
+    if(/^(insrow|delrow|fillmenu|clearmenu|sortmenu|findmenu)$/.test(c)){menuFor(c,b);return;}
+    if(E&&!/^(autosum|undo|redo)$/.test(c)){commitEdit();}
+    if(CMD[c])CMD[c]();root.focus();
+  });
+  elRib.addEventListener("change",function(e){if(e.target.hasAttribute("data-nf")){numFmtSet(e.target.value);}});
+  root.querySelector(".xl-title").addEventListener("click",function(e){var b=e.target.closest("[data-c]");if(b&&CMD[b.getAttribute("data-c")])CMD[b.getAttribute("data-c")]();});
+  root.querySelector(".xl-fx").addEventListener("pointerdown",function(e){e.preventDefault();});
+  root.querySelector(".xl-fx").addEventListener("click",function(e){var b=e.target.closest("[data-c]");if(b)CMD[b.getAttribute("data-c")]();});
+  root.querySelector(".xl-status").addEventListener("click",function(e){var b=e.target.closest("[data-c]");if(b&&CMD[b.getAttribute("data-c")])CMD[b.getAttribute("data-c")]();});
+  root.querySelector(".xl-sheets").addEventListener("click",function(e){var b=e.target.closest("[data-c]");if(b&&CMD[b.getAttribute("data-c")])CMD[b.getAttribute("data-c")]();});
+
+  /* ---- pointer handling on the grid ---- */
+  var dragging=null,dragStart=null,pressTimer=null;
+  function hit(e){
+    var rc=elScroll.getBoundingClientRect(),x=e.clientX-rc.left+elScroll.scrollLeft,y=e.clientY-rc.top+elScroll.scrollTop;
+    var c=0,r=0;for(var i=0;i<COLS;i++){if(x>=xs[i]&&x<xs[i+1]){c=i;break;}if(i===COLS-1)c=x<0?0:COLS-1;}
+    for(var j=0;j<ROWS;j++){if(y>=ys[j]&&y<ys[j+1]&&!hidden[j]){r=j;break;}if(j===ROWS-1)r=y<0?0:ROWS-1;}
+    return {c:c,r:r,x:x,y:y};
+  }
+  elScroll.addEventListener("pointerdown",function(e){
+    if(e.target.closest(".xl-ff")){return;}
+    if(e.target===elEdit)return;
+    var h=hit(e);
+    if(e.target===elHandle||e.target.closest(".xl-handle")){e.preventDefault();var g=rangeOf();dragging={type:"fill",src:g,dst:g};try{elScroll.setPointerCapture(e.pointerId);}catch(x){}return;}
+    var touch=e.pointerType==="touch";
+    if(touch&&!rangeMode){dragStart={x:e.clientX,y:e.clientY,t:Date.now(),h:h,moved:false};clearTimeout(pressTimer);pressTimer=setTimeout(function(){if(dragStart&&!dragStart.moved){showCtx(e.clientX,e.clientY);dragStart.ctx=true;}},550);return;}
+    if(E){ if(pointOk()){e.preventDefault();var ref=A(h.c,h.r);insertRef(ref);dragging={type:"point",from:h};try{elScroll.setPointerCapture(e.pointerId);}catch(x){}return;} commitEdit(); }
+    if(e.button===2)return;
+    e.preventDefault();root.focus();
+    if(e.shiftKey)setSel(sel.a,h);else setSel(h);
+    dragging={type:"sel"};try{elScroll.setPointerCapture(e.pointerId);}catch(x){}
+  });
+  elScroll.addEventListener("pointermove",function(e){
+    if(dragStart){if(Math.abs(e.clientX-dragStart.x)+Math.abs(e.clientY-dragStart.y)>8){dragStart.moved=true;clearTimeout(pressTimer);}}
+    if(!dragging)return;var h=hit(e);
+    if(dragging.type==="sel")setSel(sel.a,h);
+    else if(dragging.type==="point"){var f=dragging.from,txt=(f.c===h.c&&f.r===h.r)?A(h.c,h.r):A(Math.min(f.c,h.c),Math.min(f.r,h.r))+":"+A(Math.max(f.c,h.c),Math.max(f.r,h.r));insertRef(txt);}
+    else if(dragging.type==="fill"){
+      var s=dragging.src,dr=h.r-s.r1,dc=h.c-s.c1,dst={c0:s.c0,r0:s.r0,c1:s.c1,r1:s.r1};
+      if(Math.abs(dr)>=Math.abs(dc)&&(h.r>s.r1||h.r<s.r0)){if(h.r>s.r1)dst.r1=h.r;else dst.r0=h.r;}
+      else if(h.c>s.c1||h.c<s.c0){if(h.c>s.c1)dst.c1=h.c;else dst.c0=h.c;}
+      dragging.dst=dst;var rc=rectOf(dst.c0,dst.r0,dst.c1,dst.r1);place(elFill,rc,true);elFill.style.display="block";
+    }
+  });
+  function endDrag(e){
+    clearTimeout(pressTimer);
+    if(dragStart){var ds=dragStart;dragStart=null;if(!ds.moved&&!ds.ctx){
+      if(E){if(pointOk()){insertRef(A(ds.h.c,ds.h.r));return;}commitEdit();}
+      setSel(ds.h);startEdit(null,"edit");try{elEdit.setSelectionRange(0,elEdit.value.length);}catch(x){}lastTap=null;
+    }return;}
+    if(dragging&&dragging.type==="fill"){elFill.style.display="none";var s=dragging.src,d=dragging.dst;if(d.c0!==s.c0||d.c1!==s.c1||d.r0!==s.r0||d.r1!==s.r1)fillTo(s,d);}
+    dragging=null;
+  }
+  var lastTap=null;
+  elScroll.addEventListener("pointerup",endDrag);elScroll.addEventListener("pointercancel",function(){clearTimeout(pressTimer);dragStart=null;dragging=null;elFill.style.display="none";});
+  elScroll.addEventListener("dblclick",function(e){
+    if(e.target.closest(".xl-handle")){/* fill down to neighbour extent */var g=rangeOf();var c=g.c0-1>=0?g.c0-1:g.c1+1,r=g.r1;var last=r;while(last+1<ROWS&&nonEmpty(c,last+1))last++;if(last>r)fillTo({c0:g.c0,r0:g.r0,c1:g.c1,r1:g.r1},{c0:g.c0,r0:g.r0,c1:g.c1,r1:last});return;}
+    if(e.pointerType==="touch")return;var h=hit(e);setSel(h);startEdit(null,"edit");
+  });
+  function showCtx(x,y){showMenu([{t:"Cut",f:CMD.cut},{t:"Copy",f:CMD.copy},{t:"Paste",f:CMD.paste},"-",{t:"Insert Row",f:insertRows},{t:"Delete Row",f:deleteRows},{t:"Clear Contents",f:function(){clearRange("c");}},"-",{t:"Edit cell",f:function(){startEdit(null,"edit");}}],x,y);}
+  elScroll.addEventListener("contextmenu",function(e){e.preventDefault();var h=hit(e),g=rangeOf();if(h.c<g.c0||h.c>g.c1||h.r<g.r0||h.r>g.r1)setSel(h);showCtx(e.clientX,e.clientY);});
+  elScroll.addEventListener("click",function(e){var b=e.target.closest(".xl-ff");if(b){e.stopPropagation();filterMenu(+b.getAttribute("data-fc"),b);}});
+  /* headers */
+  function headPointer(e,isCol){
+    var rc=(isCol?elColh:elRowh).parentNode.getBoundingClientRect();
+    var pos=isCol?e.clientX-rc.left+elScroll.scrollLeft:e.clientY-rc.top+elScroll.scrollTop,arr=isCol?xs:ys,n=isCol?COLS:ROWS,idx=0;
+    for(var i=0;i<n;i++){if(pos>=arr[i]&&pos<arr[i+1]){idx=i;break;}}
+    return {idx:idx,pos:pos,edge:isCol&&Math.abs(pos-arr[idx+1])<=6?idx:(isCol&&idx>0&&Math.abs(pos-arr[idx])<=6?idx-1:-1)};
+  }
+  $(".xl-colh").addEventListener("pointerdown",function(e){
+    if(E)commitEdit();var h=headPointer(e,true);e.preventDefault();root.focus();
+    if(h.edge>=0){dragging={type:"resize",c:h.edge,x0:e.clientX,w0:cw[h.edge]};try{this.setPointerCapture(e.pointerId);}catch(x){}return;}
+    if(e.shiftKey)setSel(sel.a,{c:h.idx,r:ROWS-1});else setSel({c:h.idx,r:0},{c:h.idx,r:ROWS-1});dragging={type:"colsel",a:h.idx};try{this.setPointerCapture(e.pointerId);}catch(x){}
+  });
+  $(".xl-colh").addEventListener("pointermove",function(e){
+    if(dragging&&dragging.type==="resize"){cw[dragging.c]=Math.max(20,dragging.w0+(e.clientX-dragging.x0)/Z);layout();paintCells();}
+    else if(dragging&&dragging.type==="colsel"){var h=headPointer(e,true);setSel({c:dragging.a,r:0},{c:h.idx,r:ROWS-1});}
+    else{var h2=headPointer(e,true);this.style.cursor=h2.edge>=0?"col-resize":"default";}
+  });
+  $(".xl-colh").addEventListener("pointerup",function(){if(dragging&&dragging.type==="resize")emit();dragging=null;});
+  $(".xl-colh").addEventListener("dblclick",function(e){var h=headPointer(e,true);if(h.edge>=0){var mx=0;for(var r=0;r<ROWS;r++){var t=display(h.edge,r);mx=Math.max(mx,t.length);}cw[h.edge]=Math.max(40,Math.min(300,mx*8.2+10));layout();paintCells();emit();}});
+  $(".xl-rowh").addEventListener("pointerdown",function(e){if(E)commitEdit();var h=headPointer(e,false);e.preventDefault();root.focus();if(e.shiftKey)setSel(sel.a,{c:COLS-1,r:h.idx});else setSel({c:0,r:h.idx},{c:COLS-1,r:h.idx});dragging={type:"rowsel",a:h.idx};try{this.setPointerCapture(e.pointerId);}catch(x){}});
+  $(".xl-rowh").addEventListener("pointermove",function(e){if(dragging&&dragging.type==="rowsel"){var h=headPointer(e,false);setSel({c:0,r:dragging.a},{c:COLS-1,r:h.idx});}});
+  $(".xl-rowh").addEventListener("pointerup",function(){dragging=null;});
+  $(".xl-corner").addEventListener("pointerdown",function(e){if(E)commitEdit();e.preventDefault();root.focus();setSel({c:0,r:0},{c:COLS-1,r:ROWS-1});});
+
+  /* ---- keyboard ---- */
+  function nav(dc,dr,shift,ctrl){
+    var f=shift?sel.f:sel.a,c=f.c,r=f.r;
+    if(ctrl){
+      if(dr){var st=nonEmpty(c,r),k=r+dr;if(!st||(k>=0&&k<ROWS&&!nonEmpty(c,k))){while(k>=0&&k<ROWS&&!nonEmpty(c,k))k+=dr;}else{while(k+dr>=0&&k+dr<ROWS&&nonEmpty(c,k+dr))k+=dr;}r=cl(k,0,ROWS-1);}
+      if(dc){var st2=nonEmpty(c,r),k2=c+dc;if(!st2||(k2>=0&&k2<COLS&&!nonEmpty(k2,r))){while(k2>=0&&k2<COLS&&!nonEmpty(k2,r))k2+=dc;}else{while(k2+dc>=0&&k2+dc<COLS&&nonEmpty(k2+dc,r))k2+=dc;}c=cl(k2,0,COLS-1);}
+    }else{c+=dc;r=visRow(r+dr,dr||1);if(!dr)r=f.r;}
+    if(shift)setSel(sel.a,{c:c,r:r});else setSel({c:c,r:r});
+  }
+  root.addEventListener("keydown",function(e){
+    var ctrl=e.ctrlKey||e.metaKey,k=e.key;
+    if(e.target===elName){if(k==="Enter"){var p=P(elName.value.split(":")[0]);if(p){var q=elName.value.indexOf(":")>-1?P(elName.value.split(":")[1]):null;setSel(p,q);root.focus();}else{toast("The reference isn't valid.");}e.preventDefault();}e.stopPropagation();return;}
+    if(E){
+      if(k==="Escape"){e.preventDefault();cancelEdit();return;}
+      if(k==="Enter"){e.preventDefault();if(acEl&&acList.length&&false){acceptAC();}else commitEdit(e.shiftKey?"up":"down");return;}
+      if(k==="Tab"){e.preventDefault();if(acEl&&acList.length){acceptAC();return;}commitEdit(e.shiftKey?"left":"right");return;}
+      if(acEl&&acList.length&&(k==="ArrowDown"||k==="ArrowUp")){e.preventDefault();acIdx=(acIdx+(k==="ArrowDown"?1:-1)+acList.length)%acList.length;[].forEach.call(acEl.children,function(d,i){d.className=i===acIdx?"on":"";});return;}
+      if(k==="F2"){e.preventDefault();E.mode=E.mode==="edit"?"enter":"edit";paintSel();return;}
+      if(E.mode==="enter"&&E.from==="cell"&&(k==="ArrowUp"||k==="ArrowDown"||k==="ArrowLeft"||k==="ArrowRight")&&E.text[0]!=="="){e.preventDefault();commitEdit(k==="ArrowDown"?"down":k==="ArrowUp"?"up":k==="ArrowLeft"?"left":"right");return;}
+      if(E.mode!=="edit"&&E.text[0]==="="&&pointOkKey()&&(k==="ArrowUp"||k==="ArrowDown"||k==="ArrowLeft"||k==="ArrowRight")){e.preventDefault();var f=sel.f.c===sel.a.c&&sel.f.r===sel.a.r&&!E.pr?sel.a:{c:E.pc!=null?E.pc:sel.a.c,r:E.pr2!=null?E.pr2:sel.a.r};var nc=f.c+(k==="ArrowRight"?1:k==="ArrowLeft"?-1:0),nr=f.r+(k==="ArrowDown"?1:k==="ArrowUp"?-1:0);E.pc=cl(nc,0,COLS-1);E.pr2=cl(nr,0,ROWS-1);insertRef(A(E.pc,E.pr2));return;}
+      return;
+    }
+    if(ctrl){
+      var kk=k.toLowerCase();
+      if(kk==="c"){e.preventDefault();CMD.copy();return;}if(kk==="x"){e.preventDefault();CMD.cut();return;}if(kk==="v"){e.preventDefault();pasteAt();return;}
+      if(kk==="z"){e.preventDefault();doUndo();return;}if(kk==="y"){e.preventDefault();doRedo();return;}
+      if(kk==="b"){e.preventDefault();toggleFmt("b");return;}if(kk==="i"){e.preventDefault();toggleFmt("i");return;}if(kk==="u"){e.preventDefault();toggleFmt("u");return;}
+      if(kk==="a"){e.preventDefault();setSel({c:0,r:0},{c:COLS-1,r:ROWS-1});return;}
+      if(kk==="d"){e.preventDefault();fillDown();return;}
+      if(kk==="f"){e.preventDefault();findDialog(false);return;}if(kk==="h"){e.preventDefault();findDialog(true);return;}
+      if(k.indexOf("Arrow")===0){e.preventDefault();nav(k==="ArrowRight"?1:k==="ArrowLeft"?-1:0,k==="ArrowDown"?1:k==="ArrowUp"?-1:0,e.shiftKey,true);return;}
+      return;
+    }
+    if(k==="ArrowDown"||k==="ArrowUp"||k==="ArrowLeft"||k==="ArrowRight"){e.preventDefault();nav(k==="ArrowRight"?1:k==="ArrowLeft"?-1:0,k==="ArrowDown"?1:k==="ArrowUp"?-1:0,e.shiftKey,false);return;}
+    if(k==="Enter"){e.preventDefault();var g=rangeOf();if(g.c0!==g.c1||g.r0!==g.r1){var nr2=sel.a.r+(e.shiftKey?-1:1),nc2=sel.a.c;if(nr2>g.r1){nr2=g.r0;nc2++;if(nc2>g.c1)nc2=g.c0;}if(nr2<g.r0){nr2=g.r1;nc2--;if(nc2<g.c0)nc2=g.c1;}sel.a={c:nc2,r:nr2};paintSel();}else nav(0,e.shiftKey?-1:1,false,false);return;}
+    if(k==="Tab"){e.preventDefault();nav(e.shiftKey?-1:1,0,false,false);return;}
+    if(k==="F2"){e.preventDefault();startEdit(null,"edit");return;}
+    if(k==="Delete"||k==="Backspace"){e.preventDefault();clearRange("c");return;}
+    if(k==="Escape"){if(clip){clip=null;paintSel();}return;}
+    if(k==="Home"){e.preventDefault();setSel({c:0,r:sel.a.r});return;}
+    if(k.length===1&&!e.altKey){e.preventDefault();startEdit(k,"enter");elEdit.value=k;E.text=k;elFx.value=k;sizeEdit();updAC();return;}
+  });
+  function pointOkKey(){return pointOk();}
+  elEdit.addEventListener("input",function(){syncEdit("cell");});
+  elFx.addEventListener("input",function(){if(!E)startEdit(elFx.value,"enter",true);else syncEdit("bar");});
+  elFx.addEventListener("focus",function(){if(!E){startEdit(null,"edit",true);}});
+  elFx.addEventListener("keydown",function(e){
+    if(e.key==="Enter"){e.preventDefault();e.stopPropagation();if(E)commitEdit("down");}
+    else if(e.key==="Escape"){e.preventDefault();e.stopPropagation();cancelEdit();}
+    else if(e.key==="Tab"){e.preventDefault();e.stopPropagation();if(acEl&&acList.length)acceptAC();else if(E)commitEdit("right");}
+    else e.stopPropagation();
+  });
+  elFx.addEventListener("keyup",function(){if(E)updAC();});
+  elEdit.addEventListener("keyup",function(){if(E)updAC();});
+  elEdit.addEventListener("click",function(){if(E){updAC();}});
+  elEdit.addEventListener("blur",function(){setTimeout(function(){if(E&&E.from==="cell"&&document.activeElement!==elEdit&&document.activeElement!==elFx&&!(root.contains(document.activeElement)&&document.activeElement!==root&&document.activeElement.tagName!=="BODY")){/* keep editing; user may be tapping the ribbon */}},0);});
+  document.addEventListener("pointerdown",function(e){if(menu&&!menu.contains(e.target))closeMenus();});
+
+  /* ---- init ---- */
+  renderTabs();renderRibbon();layout();updUR();
+  function load(data,widths){cells={};cv={};hidden={};filt={on:false,crit:{},region:null};Object.keys(data||{}).forEach(function(k){var p=P(k);if(p)setRaw(p.c,p.r,data[k]);});if(widths)Object.keys(widths).forEach(function(k){cw[colIndex(k)]=widths[k];});recalc();undo=[];redo=[];clip=null;setSel({c:0,r:0},null,true);layout();paintCells();paintSel();updUR();}
+  var api={
+    el:root,load:load,onChange:function(f){listeners.push(f);},
+    get:function(a){var p=P(a);if(!p)return null;var v=valueAt(p.c,p.r);return isErr(v)?v.e:v;},
+    display:function(a){var p=P(a);return p?display(p.c,p.r):"";},
+    raw:function(a){var p=P(a);return p?rawOf(p.c,p.r):"";},
+    set:function(a,t){var p=P(a);if(!p)return;pushUndo();setRaw(p.c,p.r,t);changed();},
+    select:function(a,b){var p=P(a),q=b?P(b):null;if(p)setSel(p,q);},
+    selection:function(){var g=rangeOf();return A(g.c0,g.r0)+(g.c0!==g.c1||g.r0!==g.r1?":"+A(g.c1,g.r1):"");},
+    dump:function(){return JSON.parse(JSON.stringify({cells:cells,cw:cw}));},
+    restore:function(o){cells=o.cells||{};cw=o.cw||cw;cv={};recalc();layout();paintCells();paintSel();},
+    rows:function(c0,r0,c1,r1){var o=[];for(var r=r0;r<=r1;r++){var row=[];for(var c=c0;c<=c1;c++)row.push(valueAt(c,r));o.push(row);}return o;},
+    colRange:function(col,r0,r1){var c=colIndex(col),o=[];for(var r=r0-1;r<=r1-1;r++)o.push(valueAt(c,r));return o;},
+    isFormula:function(a){var p=P(a);var ce=p&&cells[A(p.c,p.r)];return !!(ce&&ce.f);},
+    focus:function(){root.focus();},
+    setZoom:setZoom,
+    hiddenRows:function(){return Object.keys(hidden).length;}
+  };
+  if(opt.data)load(opt.data,opt.widths);
+  return api;
+}
+global.XLSheet={create:create,colName:colName,parseAddr:P,shiftFormula:shiftFormula};
+})(window);
+
+</script>
+<script>
+(function(){
+"use strict";
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
+var KEY="da_level0_v2", S={}, STORE_OK=true;
+try{ S=JSON.parse(localStorage.getItem(KEY)||"{}")||{}; }catch(e){ S={}; STORE_OK=false; }
+S.quiz=S.quiz||{}; S.exp=S.exp||{}; S.sb=S.sb||{}; S.proj=S.proj||{}; S.port=S.port||{}; S.name=S.name||""; S.ord=S.ord||{}; S.miss=S.miss||{}; S.ask=S.ask||[]; S.days=S.days||[]; S.xl=S.xl||{}; S.set=S.set||{theme:"auto",size:"normal"};
+var SHIFT=0;
+function dayNum(){ return Math.floor((Date.now()-new Date().getTimezoneOffset()*60000)/864e5)+SHIFT; }
+function touch(){ var d=dayNum(); if(S.days.indexOf(d)<0){ S.days.push(d); if(S.days.length>400) S.days.shift(); } }
+function save(){ touch(); try{ localStorage.setItem(KEY,JSON.stringify(S)); STORE_OK=true; }catch(e){ STORE_OK=false; } var w=document.getElementById("saveWarn"); if(w) w.style.display=STORE_OK?"none":"block"; }
+function $(s){return document.querySelector(s);}
+function $$(s){return Array.prototype.slice.call(document.querySelectorAll(s));}
+function streak(){ var d=dayNum(), n=0; if(S.days.indexOf(d)<0) d--; while(S.days.indexOf(d)>-1){ n++; d--; } return n; }
+function download(name,blob){ try{ var a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=name; document.body.appendChild(a); a.click(); setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},500); }catch(e){} }
+
+/* ---------- settings applied ---------- */
+function applySettings(){
+  var r=document.documentElement;
+  if(S.set.theme==="dark"||S.set.theme==="light") r.setAttribute("data-theme",S.set.theme); else r.removeAttribute("data-theme");
+  document.body.style.fontSize=S.set.size==="large"?"20px":"17px";
+}
+
+/* ---------- tabs ---------- */
+function showTab(t){
+  $$("nav button").forEach(function(b){b.setAttribute("aria-selected",b.getAttribute("data-tab")===t?"true":"false");});
+  $$("section").forEach(function(s){s.classList.toggle("on",s.id===t);});
+  if(t==="home") renderHome();
+  if(t==="quiz"){ renderQuiz(); renderExplain(); }
+  if(t==="review") renderReview();
+  if(t==="sandbox") renderSandbox();
+  if(t==="project") renderProject();
+  if(t==="portfolio") renderPort();
+  if(t==="cert") renderCert();
+  if(t==="ask") renderAsk();
+  if(t==="settings") renderSettings();
+  window.scrollTo(0,0);
+}
+$("nav").addEventListener("click",function(e){var b=e.target.closest("button[data-tab]"); if(b) showTab(b.getAttribute("data-tab"));});
+
+var Q=[
+{q:"Data is best described as:",o:["Recorded facts such as numbers, words, dates or photos","Only numbers in a spreadsheet","Only things computers create","Charts and graphs"],a:0,h:"Think about the shop notebook. What is written in it?",e:"Data is recorded facts. It can be numbers, words, dates, photos and more."},
+{q:"Which one is quantitative data?",o:["A customer review","Ten bags of rice","The colour of a shirt","A customer's name"],a:1,h:"Quantitative means you can count or measure it.",e:"Ten bags of rice is a count. The others are descriptions or labels."},
+{q:"'The service was slow' is what kind of data?",o:["Quantitative","Qualitative","Neither","A formula"],a:1,h:"Is it a measurement, or a description of an opinion?",e:"It is qualitative: a description, not a measurement."},
+{q:"Structured data fits neatly into:",o:["Rows and columns","Voice notes","Photos","Long videos"],a:0,h:"Think of a table or a spreadsheet.",e:"Structured data fits a table of rows and columns."},
+{q:"Which is unstructured data?",o:["A sales table","A voice note from a customer","A list of prices","A column of quantities"],a:1,h:"Which one has no fixed rows and columns?",e:"Audio, photos, long text and video are unstructured."},
+{q:"The goal of data analysis is to:",o:["Make charts","Use difficult maths","Support better decisions","Collect as much data as possible"],a:2,h:"What should change after the analysis?",e:"An analysis exists to support a decision or action."},
+{q:"Which kind of analysis answers 'Why did it happen?'",o:["Descriptive","Diagnostic","Predictive","Prescriptive"],a:1,h:"Diagnosis in medicine means finding the cause.",e:"Diagnostic analysis looks for causes."},
+{q:"'Buy extra rice on Thursday' is which kind of analysis?",o:["Descriptive","Diagnostic","Predictive","Prescriptive"],a:3,h:"It tells you what to do.",e:"Prescriptive analysis recommends an action."},
+{q:"'Next Friday will probably be busy' is which kind?",o:["Descriptive","Diagnostic","Predictive","Prescriptive"],a:2,h:"It looks forward to what is likely.",e:"Predictive analysis estimates what is likely to happen next."},
+{q:"What is the correct order of the six phases?",o:["Ask, Prepare, Process, Analyze, Share, Act","Analyze, Ask, Share, Prepare, Act, Process","Prepare, Ask, Act, Analyze, Process, Share","Process, Ask, Prepare, Share, Analyze, Act"],a:0,h:"You start with the question and end with a decision.",e:"Ask, Prepare, Process, Analyze, Share, Act."},
+{q:"Which phase is mainly about cleaning data?",o:["Ask","Prepare","Process","Share"],a:2,h:"Removing duplicates and fixing errors happens in this phase.",e:"Process is the cleaning phase."},
+{q:"Which is the better question?",o:["How is my shop doing?","Which three products brought the most profit in October?","Is business good?","Are people buying?"],a:1,h:"A good question is specific and tells you which data to open.",e:"It names what, which period, and what to measure."},
+{q:"One row has a missing price. What should you do?",o:["Guess a price that looks right","Delete the whole data set","Ask the owner, or mark the value as missing","Use zero"],a:2,h:"Inventing data can quietly make every result wrong.",e:"Never guess. Ask, or mark it as missing and say so."},
+{q:"Ice cream sales and sunburn both rise in hot months. What does this show?",o:["Ice cream causes sunburn","Sunburn causes ice cream sales","Two things can rise together without one causing the other","Nothing at all"],a:2,h:"What else happens in hot months?",e:"Correlation is not cause. Heat explains both."},
+{q:"One quiet Friday happened. What can you say?",o:["Fridays are slow","Fridays are busy","One day is a tiny sample, so look at more weeks","Close the shop on Fridays"],a:2,h:"How many Fridays did you look at?",e:"A small sample is weak evidence."},
+{q:"The four step version says 'Collect and clean'. Which two phases does that combine?",o:["Ask and Share","Prepare and Process","Analyze and Act","Share and Act"],a:1,h:"One gets the data. The other cleans it.",e:"Prepare plus Process."},
+{q:"When you share results, you should:",o:["Start with the method","Start with the answer, then the evidence","Show ten charts","Hide the limits"],a:1,h:"Busy people want the answer first.",e:"Lead with the answer. One chart, one message. Be honest about limits."},
+{q:"You removed a duplicate row. What next?",o:["Nothing","Write down what you changed","Delete the original file","Tell no one"],a:1,h:"Another analyst should be able to repeat your work.",e:"Record every change so your work can be checked and repeated."},
+{q:"In the Nigerian job postings checked on 1 Nov 2026, which tools were asked for most?",o:["Photoshop, Word, Paint","S Q L, Excel and Power B I","Only Python","Only Tableau"],a:1,h:"Think about the roadmap order: Excel, then S Q L, then Power B I.",e:"S Q L, Excel and Power B I came up most. Python matters more at mid level and above."},
+{q:"About how long is the foundation set (Levels 0 to 4) at 30 minutes a day?",o:["2 weeks","About 6 months","10 years","1 day"],a:1,h:"The estimate is about 90 hours in total.",e:"Roughly 90 hours, so about 26 weeks at 30 minutes a day. It is an estimate, not a promise."},
+{q:"Which of these is information, not just raw data?",o:["12","Friday is our busiest day","Rice","800"],a:1,h:"Information is data that has been turned into something that means something.",e:"'Friday is our busiest day' is a finding. The others are raw values."},
+{q:"Why do you ask the question before you open the data?",o:["It looks professional","So you know which data to look at and what to ignore","Because the data is secret","It does not matter"],a:1,h:"Think of going to the market with a shopping list.",e:"A clear question tells you what to measure and where to look."},
+{q:"The Act phase is about:",o:["Cleaning the data","Turning findings into a decision or action","Collecting more data","Drawing charts"],a:1,h:"It is the last phase.",e:"Act means someone does something because of the analysis."},
+{q:"Which is better when you share results?",o:["One chart with one clear message","Ten charts so nobody misses anything","Only a table of 500 rows","No chart, only jargon"],a:0,h:"Busy people give you about a minute.",e:"One chart, one message, answer first."},
+{q:"Which statement about jobs is honest?",o:["Finish this course and you will definitely get a job","No course can promise a job; the roadmap gives honest odds and a path","Nobody ever gets hired","Certificates guarantee interviews"],a:1,h:"Be careful with anyone who promises a result.",e:"Skills, projects and persistence improve your odds. Nothing can guarantee a job."},
+{q:"A column has the words Rice, rice and RICE. What is the problem?",o:["Nothing, they mean the same so it is fine","The same item is spelled three ways, so counts get split","Rice should be a number","Capitals are illegal"],a:1,h:"A computer sees different spellings as different things.",e:"Make the spelling consistent before you count or total."},
+{q:"'How many bags of rice did we sell last week?' is which kind of analysis?",o:["Descriptive","Diagnostic","Predictive","Prescriptive"],a:0,h:"It simply reports what happened.",e:"Descriptive analysis says what happened."},
+{q:"Is the certificate from this course an accredited qualification?",o:["Yes, it is a university degree","No, it shows you completed the course; it is not accredited","Yes, employers must accept it","It is a passport"],a:1,h:"Read the small print at the bottom of the certificate.",e:"It is a completion certificate. Your projects and skills carry the weight."},
+{q:"Which order does the roadmap suggest for tools?",o:["Excel first, then S Q L, then Power B I","Power B I first, then Excel","Python first, then everything","Photoshop first"],a:0,h:"Start with the tool almost everyone already has.",e:"Excel, then S Q L, then Power B I. Python comes later."},
+{q:"Writing 'missing' instead of guessing a value is called:",o:["Being lazy","Being honest about the gap in the data","A formula error","Deleting data"],a:1,h:"What matters most to the person trusting your numbers?",e:"Marking a gap openly keeps the analysis trustworthy."}
+];
+var EX=[
+{q:"In your own words: what is data analysis?",m:"Collecting, cleaning and studying data to find answers, so that people can make better decisions. The goal is a decision or action."},
+{q:"Explain quantitative and qualitative data. Give one example of each.",m:"Quantitative data is numbers you count or measure, like 10 bags of rice. Qualitative data is descriptions or opinions, like 'the service was slow'."},
+{q:"List the six phases in order and say what each one does.",m:"Ask: find the real question. Prepare: get trusted data. Process: clean it. Analyze: find patterns. Share: show it clearly. Act: recommend a decision."},
+{q:"Why should you never guess a missing value?",m:"A guessed value looks real but is invented. It can quietly make every total and chart wrong. Ask the owner or mark it as missing and say so."},
+{q:"What is the difference between correlation and cause? Give an example.",m:"Two things can rise together without one causing the other. Ice cream sales and sunburn both rise in hot weather. The heat is the cause of both."}
+];
+
+
+
+/* ---------- shuffled options ---------- */
+function order(i){
+  var n=Q[i].o.length, o=S.ord[i];
+  if(!o||o.length!==n){ o=[]; for(var k=0;k<n;k++) o.push(k); for(var j=n-1;j>0;j--){ var r=Math.floor(Math.random()*(j+1)); var t=o[j]; o[j]=o[r]; o[r]=t; } S.ord[i]=o; save(); }
+  return o;
+}
+/* ---------- quiz ---------- */
+function qPoints(){var p=0;for(var i=0;i<Q.length;i++){var s=S.quiz[i];if(s&&s.pts)p+=s.pts;}return p;}
+function qDone(){var n=0;for(var i=0;i<Q.length;i++){if(S.quiz[i]&&S.quiz[i].done)n++;}return n;}
+function addMiss(i){ if(!S.miss[i]) S.miss[i]={box:0,due:dayNum()+1}; }
+function renderQuiz(){
+  var h="";
+  Q.forEach(function(q,i){
+    var s=S.quiz[i]||{tries:0,done:false,pts:0,pick:[]}, ord=order(i);
+    h+='<div class="card" data-q="'+i+'"><b>'+(i+1)+'. '+esc(q.q)+'</b>';
+    ord.forEach(function(oi){
+      var cls="opt";
+      if(s.pick&&s.pick.indexOf(oi)>-1) cls+= (oi===q.a?" good":" bad");
+      if(s.done&&oi===q.a) cls="opt good";
+      h+='<button class="'+cls+'" data-act="pick" data-q="'+i+'" data-o="'+oi+'"'+(s.done?" disabled":"")+'>'+esc(q.o[oi])+'</button>';
+    });
+    if(s.tries>=1&&!s.done) h+='<div class="msg hint">Hint: '+esc(q.h)+'</div>';
+    if(s.done) h+='<div class="msg '+(s.pts>0?"ok":"warn")+'">'+(s.pts===1?"Correct. ":s.pts===0.5?"Correct on the second try. ":"The answer is shown. ")+esc(q.e)+'</div>';
+    h+='</div>';
+  });
+  $("#qlist").innerHTML=h;
+  var pts=qPoints(), pct=Math.round(pts/Q.length*100), pass=pts>=Q.length*0.8;
+  $("#qscore").innerHTML='<div class="score">Score: '+pts+' / '+Q.length+' ('+pct+'%)</div><div class="bar"><i style="width:'+pct+'%"></i></div><p class="note">Answered: '+qDone()+' of '+Q.length+'. '+(qDone()<Q.length?"Keep going. You can stop and come back. Your place is saved.":(pass?"You passed the gate quiz.":"Below 80%. Use Review to repeat the ones you missed, then reset and try again."))+'</p>';
+}
+function renderExplain(){
+  var h="";
+  EX.forEach(function(x,i){
+    var s=S.exp[i]||{txt:"",shown:false,self:""};
+    h+='<div class="card"><b>'+(i+1)+'. '+esc(x.q)+'</b><textarea data-act="exptxt" data-i="'+i+'" placeholder="Write in your own words...">'+esc(s.txt)+'</textarea>';
+    h+='<button class="btn alt" data-act="expshow" data-i="'+i+'"'+((s.txt||"").length<25?" disabled":"")+'>Show model answer</button>';
+    if(s.shown){
+      h+='<div class="msg hint"><b>Model answer:</b> '+esc(x.m)+'</div><button class="btn" data-act="expself" data-i="'+i+'" data-v="got">I got the main idea</button><button class="btn alt" data-act="expself" data-i="'+i+'" data-v="review">I need to review</button>';
+      if(s.self) h+='<div class="msg '+(s.self==="got"?"ok":"warn")+'">'+(s.self==="got"?"Marked as learned.":"Marked for review. Re-read the notes, then try again.")+'</div>';
+    }
+    h+='</div>';
+  });
+  $("#elist").innerHTML=h;
+}
+
+/* ---------- review (spaced) ---------- */
+var RV={}; // ephemeral state for current review round
+var GAPS=[1,3,7];
+function dueList(){ var d=dayNum(), a=[]; Object.keys(S.miss).forEach(function(k){ if(S.miss[k].due<=d) a.push(+k); }); return a.sort(function(x,y){return x-y;}); }
+function renderReview(){
+  var due=dueList(), all=Object.keys(S.miss).length, h="";
+  h+='<div class="card"><b>Questions to come back to</b><p class="note">Any quiz question you missed comes back here after 1 day, then 3 days, then 7 days. Get it right three times and it leaves the list. This is how it sticks.</p><p><span class="tag">In your review list: '+all+'</span><span class="tag">Due today: '+due.length+'</span></p></div>';
+  if(!all){ h+='<div class="msg ok">Nothing to review yet. Missed questions from the quiz will appear here.</div>'; }
+  else if(!due.length){ h+='<div class="msg ok">Nothing is due today. Come back tomorrow, or practise early:</div><button class="btn alt" id="rvearly">Practise my missed questions now</button>'; }
+  var list=RV.force?Object.keys(S.miss).map(Number):due;
+  list.forEach(function(i){
+    var q=Q[i], r=RV[i]||{done:false,right:false,pick:[]}, ord=order(i);
+    h+='<div class="card" data-rq="'+i+'"><b>'+esc(q.q)+'</b>';
+    ord.forEach(function(oi){
+      var cls="opt"; if(r.pick.indexOf(oi)>-1) cls+=(oi===q.a?" good":" bad"); if(r.done&&oi===q.a) cls="opt good";
+      h+='<button class="'+cls+'" data-act="rvpick" data-q="'+i+'" data-o="'+oi+'"'+(r.done?" disabled":"")+'>'+esc(q.o[oi])+'</button>';
+    });
+    if(r.done) h+='<div class="msg '+(r.right?"ok":"warn")+'">'+(r.right?"Right. It will come back later.":"Not this time. It will come back tomorrow.")+' '+esc(q.e)+'</div>';
+    h+='</div>';
+  });
+  $("#rvbody").innerHTML=h;
+}
+
+/* ---------- quiz + review events ---------- */
+document.addEventListener("click",function(e){
+  var b=e.target.closest("[data-act]"); if(!b) return;
+  var a=b.getAttribute("data-act");
+  if(a==="pick"){
+    var i=+b.getAttribute("data-q"), o=+b.getAttribute("data-o"), q=Q[i];
+    var s=S.quiz[i]||{tries:0,done:false,pts:0,pick:[]}; if(s.done) return;
+    s.pick=s.pick||[]; s.pick.push(o);
+    if(o===q.a){ s.done=true; s.pts=s.tries===0?1:0.5; if(s.pts<1) addMiss(i); }
+    else { s.tries++; addMiss(i); if(s.tries>=2){ s.done=true; s.pts=0; } }
+    S.quiz[i]=s; save(); renderQuiz(); updateGate();
+  } else if(a==="rvpick"){
+    var i2=+b.getAttribute("data-q"), o2=+b.getAttribute("data-o"), r=RV[i2]||{done:false,right:false,pick:[]}; if(r.done) return;
+    r.pick.push(o2);
+    if(o2===Q[i2].a){ r.done=true; r.right=true; var m=S.miss[i2]; if(m){ m.box++; if(m.box>=3) delete S.miss[i2]; else m.due=dayNum()+GAPS[m.box-1]; } }
+    else if(r.pick.length>=2){ r.done=true; r.right=false; if(S.miss[i2]){ S.miss[i2].box=0; S.miss[i2].due=dayNum()+1; } }
+    RV[i2]=r; save(); renderReview();
+  } else if(a==="expshow"){ var i3=+b.getAttribute("data-i"); S.exp[i3]=S.exp[i3]||{txt:"",shown:false,self:""}; S.exp[i3].shown=true; save(); renderExplain(); }
+  else if(a==="expself"){ var i4=+b.getAttribute("data-i"); S.exp[i4].self=b.getAttribute("data-v"); save(); renderExplain(); }
+});
+document.addEventListener("input",function(e){
+  var t=e.target; if(t.getAttribute&&t.getAttribute("data-act")==="exptxt"){
+    var i=+t.getAttribute("data-i"); S.exp[i]=S.exp[i]||{txt:"",shown:false,self:""}; S.exp[i].txt=t.value; save();
+    var btn=t.parentNode.querySelector('[data-act="expshow"]'); if(btn) btn.disabled=t.value.length<25;
+  }
+});
+$("#qreset").addEventListener("click",function(){ S.quiz={}; S.exp={}; S.ord={}; save(); renderQuiz(); renderExplain(); updateGate(); });
+document.addEventListener("click",function(e){ if(e.target&&e.target.id==="rvearly"){ RV={force:true}; renderReview(); } });
+
+/* ---------- sandbox on a real-looking spreadsheet ---------- */
+var sheet=null, sheetKey=null, saveT=null;
+function mountSheet(key,data,widths,host,opts){
+  var h=host||$("#xlhost");
+  sheet=XLSheet.create(h,Object.assign({height:Math.min(470,Math.max(360,window.innerHeight-190)),title:"Level0-"+key},opts||{}));
+  sheetKey=key;
+  if(S.xl[key]){ try{ sheet.restore(S.xl[key]); }catch(e){ sheet.load(data,widths); } } else sheet.load(data,widths);
+  sheet.onChange(function(){
+    clearTimeout(saveT); saveT=setTimeout(function(){ try{ S.xl[key]=sheet.dump(); save(); }catch(e){} },300);
+    if(SBCHECK[key]) SBCHECK[key]();
+  });
+  if(SBCHECK[key]) SBCHECK[key]();
+  return sheet;
+}
+function v(a){ var x=sheet.get(a); return x==null?"":x; }
+function blank(x){ return x===""||x==null; }
+function d1data(){ return {A1:"Day",B1:"Item",C1:"Qty",D1:"Price",A2:"Mon",B2:"Rice",C2:12,D2:800,A3:"Tue",B3:"rice ",C3:9,D3:800,A4:"Wed",B4:"RICE",C4:"twelve",D4:800,A5:"Thu",B5:"Beans",C5:5,D5:"",A6:"Thu",B6:"Beans",C6:5,D6:"",A7:"Fri",B7:"Rice",C7:18,D7:800}; }
+function t1rows(){ var rows=[]; for(var r=2;r<=14;r++){ var row={d:v("A"+r),i:v("B"+r),q:v("C"+r),p:v("D"+r)}; if(blank(row.d)&&blank(row.i)&&blank(row.q)&&blank(row.p)) continue; rows.push(row); } return rows; }
+function t1checks(rows){
+  var thu=rows.filter(function(r){return String(r.d).trim()==="Thu"&&r.i==="Beans";});
+  var days=rows.map(function(r){return String(r.d).trim();});
+  return [
+   ["Every item is spelled exactly Rice or Beans (capital first letter, no extra space)", rows.length>0&&rows.every(function(r){return r.i==="Rice"||r.i==="Beans";})],
+   ["Every quantity is a real number, not a word", rows.length>0&&rows.every(function(r){return typeof r.q==="number";})],
+   ["The duplicate Thursday row is gone (exactly one Thursday beans row)", thu.length===1],
+   ["The missing Thursday price is still empty, not guessed", thu.length===1&&blank(thu[0].p)],
+   ["All five real days are still there: Mon, Tue, Wed, Thu, Fri", ["Mon","Tue","Wed","Thu","Fri"].every(function(d){return days.indexOf(d)>-1;})]
+  ];
+}
+var DAYS=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"], RICE=[8,9,7,10,18,14,6];
+function d2data(){ var o={A1:"Day",B1:"Bags of rice",D1:"Busiest day's bags"}; for(var i=0;i<7;i++){ o["A"+(i+2)]=DAYS[i]; o["B"+(i+2)]=RICE[i]; } return o; }
+function t2checks(){
+  var vals=[],pairs=true,i;
+  for(i=2;i<=8;i++){ vals.push(v("B"+i)); var di=DAYS.indexOf(v("A"+i)); if(di<0||RICE[di]!==v("B"+i)) pairs=false; }
+  var desc=vals.every(function(x,k){ return typeof x==="number"&&(k===0||vals[k-1]>=x); });
+  return [
+    ["Sort the table so the biggest number of bags is at the top (and each day stays next to its own number)", desc&&pairs],
+    ["In cell D2 type the formula =MAX(B2:B8) so the sheet finds the highest number", sheet.isFormula("D2")&&v("D2")===18]
+  ];
+}
+var T3=[["How many bags of rice did we sell last week?","Descriptive"],["Why did sales drop on Wednesday?","Diagnostic"],["Will next month be busier than this one?","Predictive"],["Should we hire a second cashier on Fridays?","Prescriptive"],["What was our total income in October?","Descriptive"]];
+var D4=[["Mon","Rice",8],["Mon","Beans",5],["Tue","Rice",9],["Tue","Beans",4],["Wed","Rice",7],["Wed","Beans",6],["Thu","Rice",10],["Thu","Beans",5],["Fri","Rice",18],["Fri","Beans",7]];
+function d4data(){ var o={A1:"Day",B1:"Item",C1:"Qty",E1:"Question",F1:"Your formula",E2:"Total beans sold",E3:"Number of rice rows"}; D4.forEach(function(r,i){ o["A"+(i+2)]=r[0]; o["B"+(i+2)]=r[1]; o["C"+(i+2)]=r[2]; }); return o; }
+function t4checks(){
+  var beans=0,rice=0; D4.forEach(function(r){ if(r[1]==="Beans") beans+=r[2]; else rice++; });
+  return [
+    ["In F2 use =SUMIF to total the beans (answer "+beans+")", sheet.isFormula("F2")&&/SUMIF/i.test(sheet.raw("F2"))&&v("F2")===beans],
+    ["In F3 use =COUNTIF to count the rice rows (answer "+rice+")", sheet.isFormula("F3")&&/COUNTIF/i.test(sheet.raw("F3"))&&v("F3")===rice]
+  ];
+}
+var TASKS={
+ t1:{label:"1. Clean it",intro:'<b>Task 1: Clean the notebook (guided).</b> This is the shop notebook in a real-style spreadsheet. It has four problems: spelling that differs (Rice, rice, RICE), a number written as a word, a repeated Thursday row, and a missing price. Fix them. <b>Tools:</b> tap a cell and type to replace it. Use <i>Find &amp; Replace</i> (Home tab) or <i>Remove Duplicates</i> (Data tab), or right-click or long-press a row to delete it. Do <b>not</b> guess the missing price.',data:d1data,w:{A:50,B:70,C:50,D:60},check:function(){return t1checks(t1rows());},key:"d1",done:"Task 1 complete. You cleaned the data and did not guess the missing price."},
+ t2:{label:"2. Find the pattern",intro:'<b>Task 2: Find the pattern (on your own).</b> Sort the bags from biggest to smallest, then ask the sheet for the highest number with a formula. <b>Tools:</b> tap any number in the Bags column (column B), open the Data tab, and tap <i>Sort Z to A</i>. Excel sorts the whole table by the column you are in. Then tap D2 and type <code>=MAX(B2:B8)</code>. After that, answer the two questions under the sheet.',data:d2data,w:{A:50,B:100,D:130},check:t2checks,key:null},
+ t3:{label:"3. Name the question",intro:null},
+ t4:{label:"4. Challenge",intro:'<b>Challenge (optional, not needed for the certificate):</b> use SUMIF and COUNTIF. Tap F2 and type <code>=SUMIF(B2:B11,"Beans",C2:C11)</code>. Then in F3 count the Rice rows with <code>=COUNTIF(B2:B11,"Rice")</code>. Try changing the word and watch the answer change.',data:d4data,w:{A:50,B:60,C:40,D:20,E:150,F:110},check:t4checks,key:"d4",done:"Challenge complete. You can total by a condition. That is the heart of real spreadsheet work."},
+ free:{label:"Scratch",intro:'<b>Scratch sheet.</b> Free practice. Try typing <code>=SUM(</code> and tap cells, or <code>=AVERAGE(</code>. Nothing here is checked.',data:function(){return {A1:"Try me",A2:5,A3:10,A4:15};},w:{A:90},check:null,key:null}
+};
+var SBCHECK={};
+var curTask="t1";
+function paintChecks(key){
+  var T=TASKS[key], box=$("#sbchk"); if(!box||!T.check) return;
+  var cs=T.check(), h="";
+  cs.forEach(function(c){h+='<li class="'+(c[1]?"y":"")+'">'+esc(c[0])+'</li>';});
+  box.innerHTML=h;
+  if(T.key){
+    var all=cs.every(function(c){return c[1];});
+    if(all&&!S.sb[T.key]){ S.sb[T.key]=true; save(); updateGate(); }
+    $("#sbmsg").innerHTML=S.sb[T.key]?'<div class="msg ok">'+esc(T.done)+'</div>':"";
+  }
+}
+function renderSandbox(){
+  var bar="";
+  Object.keys(TASKS).forEach(function(k){ bar+='<button class="pill'+(k===curTask?" on":"")+'" data-act="task" data-k="'+k+'">'+esc(TASKS[k].label)+(S.sb["d"+k.slice(1)]&&k!=="free"?" ✓":"")+'</button>'; });
+  var T=TASKS[curTask], h='<div class="pills">'+bar+'</div>';
+  if(curTask==="t3"){
+    var a=S.sb.t3a||{}; h+='<div class="card"><b>Task 3: Which kind of analysis?</b><p>Match each question to Descriptive, Diagnostic, Predictive or Prescriptive.</p>';
+    T3.forEach(function(x,i){ h+='<label for="t3_'+i+'">'+(i+1)+'. '+esc(x[0])+'</label><select id="t3_'+i+'" data-act="t3sel" data-i="'+i+'"><option value="">Choose...</option>'+["Descriptive","Diagnostic","Predictive","Prescriptive"].map(function(o){return '<option'+(a[i]===o?" selected":"")+'>'+o+'</option>';}).join("")+'</select>'; });
+    h+='<button class="btn" data-act="t3check">Check</button><div id="t3msg">'+(S.sb.d3?'<div class="msg ok">Task 3 complete.</div>':"")+'</div></div>';
+    $("#sbbody").innerHTML=h; sheet=null; return;
+  }
+  h+='<div class="card">'+T.intro+'</div><div id="xlhost"></div>';
+  if(T.check) h+='<ul class="chk" id="sbchk"></ul><div id="sbmsg"></div>';
+  if(curTask==="t2"){
+    var x=S.sb.t2a||{peak:"",dec:""};
+    h+='<div class="card"><label for="t2p">Which day is the peak?</label><select id="t2p" data-act="t2sel" data-k="peak"><option value="">Choose...</option>'+DAYS.map(function(d){return '<option'+(x.peak===d?" selected":"")+'>'+d+'</option>';}).join("")+'</select>';
+    var opts=["Buy extra rice on Thursday","Buy less rice on Friday","Do nothing"];
+    h+='<label for="t2d">Which decision fits the pattern?</label><select id="t2d" data-act="t2sel" data-k="dec"><option value="">Choose...</option>'+opts.map(function(d){return '<option'+(x.dec===d?" selected":"")+'>'+d+'</option>';}).join("")+'</select><button class="btn" data-act="t2check">Check</button><div id="t2msg">'+(S.sb.d2?'<div class="msg ok">Task 2 complete. Friday is the peak, so stock up on Thursday.</div>':"")+'</div></div>';
+  }
+  h+='<button class="btn alt" data-act="sbreset">Reset this sheet</button>';
+  $("#sbbody").innerHTML=h;
+  SBCHECK[curTask]=function(){ paintChecks(curTask); };
+  mountSheet(curTask,T.data(),T.w);
+}
+document.addEventListener("input",function(e){});
+document.addEventListener("change",function(e){
+  var t=e.target, a=t.getAttribute&&t.getAttribute("data-act");
+  if(a==="t2sel"){ S.sb.t2a=S.sb.t2a||{peak:"",dec:""}; S.sb.t2a[t.getAttribute("data-k")]=t.value; save(); }
+  if(a==="t3sel"){ S.sb.t3a=S.sb.t3a||{}; S.sb.t3a[+t.getAttribute("data-i")]=t.value; save(); }
+});
+document.addEventListener("click",function(e){
+  var b=e.target.closest("[data-act]"); if(!b) return; var a=b.getAttribute("data-act");
+  if(a==="task"){ curTask=b.getAttribute("data-k"); renderSandbox(); }
+  else if(a==="sbreset"){ delete S.xl[curTask]; if(TASKS[curTask].key) S.sb[TASKS[curTask].key]=false; save(); renderSandbox(); updateGate(); }
+  else if(a==="t2check"){
+    var x=S.sb.t2a||{}, msg=$("#t2msg"), cs=t2checks(), sheetOk=cs.every(function(c){return c[1];});
+    if(!sheetOk){ msg.innerHTML='<div class="msg hint">First finish the two steps in the sheet (the ticks above turn green).</div>'; }
+    else if(x.peak==="Fri"&&x.dec==="Buy extra rice on Thursday"){ S.sb.d2=true; save(); msg.innerHTML='<div class="msg ok">Task 2 complete. Friday is the peak, so stock up on Thursday.</div>'; updateGate(); }
+    else if(x.peak!=="Fri"){ msg.innerHTML='<div class="msg hint">Hint: which day has the highest number? Look at the top after sorting, or at D2.</div>'; }
+    else { msg.innerHTML='<div class="msg hint">Hint: Friday is the busy day. What would stop you running out on that day?</div>'; }
+  }
+  else if(a==="t3check"){
+    var ans=S.sb.t3a||{}, wrong=[]; T3.forEach(function(q,i){ if(ans[i]!==q[1]) wrong.push(i+1); });
+    if(!wrong.length){ S.sb.d3=true; save(); $("#t3msg").innerHTML='<div class="msg ok">Task 3 complete.</div>'; updateGate(); }
+    else { $("#t3msg").innerHTML='<div class="msg hint">Check question'+(wrong.length>1?"s ":" ")+wrong.join(", ")+'. Hint: Descriptive = what happened. Diagnostic = why. Predictive = what next. Prescriptive = what should we do.</div>'; }
+  }
+});
+
+var PRICES={rice:800,beans:700,indomie:300};
+var RAW=[["W1 Mon","8","5","12"],["W1 Tue","9","four","10"],["W1 Wed","7","60","11"],["W1 Thu","10","5","9"],["W1 Fri","18","7","14"],["W1 Sat","14","9","14"],["W1 Sun","6","3","8"],["W2 Mon","9","5","11"],["W2 Mon","9","5","11"],["W2 Tue","8","4","12"],["W2 Wed","8","5","10"],["W2 Thu","11","6",""],["W2 Fri","20","8","15"],["W2 Sat","15","9","15"],["W2 Sun","5","3","9"]];
+var CLEAN=[["Mon",8,5,12],["Tue",9,4,10],["Wed",7,6,11],["Thu",10,5,9],["Fri",18,7,14],["Sat",14,9,14],["Sun",6,3,8],["Mon",9,5,11],["Tue",8,4,12],["Wed",8,5,10],["Thu",11,6,null],["Fri",20,8,15],["Sat",15,9,15],["Sun",5,3,9]];
+function model(){
+  var tot={rice:0,beans:0,indomie:0}, byday={};
+  CLEAN.forEach(function(r){ var d=r[0]; byday[d]=byday[d]||0; [["rice",1],["beans",2],["indomie",3]].forEach(function(k){ if(r[k[1]]!==null){ tot[k[0]]+=r[k[1]]; byday[d]+=r[k[1]]; } }); });
+  var best="",bv=-1; Object.keys(byday).forEach(function(d){ if(byday[d]>bv){bv=byday[d];best=d;} });
+  return {tot:tot,byday:byday,best:best,bv:bv};
+}
+var PF=[["q","1. The question I am answering","What exactly does the client want to know? Be specific."],["d","2. Data used and how I cleaned it","List every problem you found and what you did. Never guess missing values."],["p","3. The pattern I found","Use numbers: units, naira, days."],["a","4. My recommendation (who, what, when)","One clear action for Mama Tunde."],["l","5. Limits and what I would check next","Be honest about what the data cannot tell you."]];
+
+function renderProject(){
+  var h='<div class="card"><b>Client brief (fictional client).</b> Mama Tunde runs a small provision shop. She sells rice, beans and indomie. She kept a notebook for two weeks and wants to know what to stock more of, and when. Prices per unit: rice 800 naira, beans 700 naira, indomie 300 naira. If you phoned her, she would say beans never pass ten in a day, and that "four" means 4.</div>';
+  h+='<h3>Her notebook (messy, copied as written)</h3><p class="note">Clean it in the sheet. Look for: a number written as a word, a number that looks wrong, a repeated row, and a blank. Then add totals with formulas such as <code>=SUM(B2:B15)</code>.</p><div id="xlhost"></div>';
+  h+='<h3>Your totals</h3><p class="note">Type what you found, then check. Rice and beans and indomie are units over two weeks.</p><div class="row3"><div><label for="tt_rice">Rice units</label><input type="text" inputmode="numeric" id="tt_rice" data-act="tt" data-k="rice" value="'+esc(S.proj.t_rice||"")+'"></div><div><label for="tt_beans">Beans units</label><input type="text" inputmode="numeric" id="tt_beans" data-act="tt" data-k="beans" value="'+esc(S.proj.t_beans||"")+'"></div><div><label for="tt_indomie">Indomie units</label><input type="text" inputmode="numeric" id="tt_indomie" data-act="tt" data-k="indomie" value="'+esc(S.proj.t_indomie||"")+'"></div></div><button class="btn alt" id="tmine">Check my totals</button><div id="tmsg"></div>';
+  h+='<h3>Write your one-page memo</h3>';
+  PF.forEach(function(f){ h+='<label for="pf_'+f[0]+'">'+f[1]+'</label><textarea id="pf_'+f[0]+'" data-act="pf" data-k="'+f[0]+'" placeholder="'+esc(f[2])+'">'+esc(S.proj[f[0]]||"")+'</textarea>'; });
+  h+='<div id="pstat"></div><button class="btn alt" id="pcheck">Show the model numbers</button><button class="btn alt" id="pmodel" disabled>Show a model memo</button><button class="btn" id="pdl">Download memo (.txt)</button><div id="pout"></div><div id="pcopy"></div>';
+  $("#proj").innerHTML=h; updProj();
+  SBCHECK.proj=null;
+  var rawd={A1:"Day",B1:"Rice",C1:"Beans",D1:"Indomie"}; RAW.forEach(function(r,i){ for(var c=0;c<4;c++) rawd["ABCD"[c]+(i+2)]=r[c]; });
+  mountSheet("proj",rawd,{A:60,B:50,C:50,D:60});
+}
+function projFilled(){ return PF.every(function(f){ return (S.proj[f[0]]||"").trim().length>=30; }); }
+function updProj(){
+  var n=PF.filter(function(f){return (S.proj[f[0]]||"").trim().length>=30;}).length;
+  $("#pstat").innerHTML='<p class="note">Sections written: '+n+' of 5 (30 characters or more each).</p>';
+  $("#pmodel").disabled=!projFilled();
+}
+document.addEventListener("input",function(e){
+  var t=e.target, a=t.getAttribute&&t.getAttribute("data-act");
+  if(a==="pf"){ S.proj[t.getAttribute("data-k")]=t.value; save(); updProj(); updateGate(); }
+  if(a==="tt"){ S.proj["t_"+t.getAttribute("data-k")]=t.value; save(); }
+});
+function fmt(n){ return String(n).replace(/\B(?=(\d{3})+(?!\d))/g,","); }
+document.addEventListener("click",function(e){
+  var id=e.target&&e.target.id;
+  if(id==="tmine"){
+    var m=model(), msgs=[], ok=0;
+    ["rice","beans","indomie"].forEach(function(k){ var got=parseInt((S.proj["t_"+k]||"").replace(/[^0-9]/g,""),10); if(got===m.tot[k]){ ok++; msgs.push(k+": correct."); } else msgs.push(k+": not yet. Re-check the cleaning steps in the sheet."); });
+    $("#tmsg").innerHTML='<div class="msg '+(ok===3?"ok":"hint")+'">'+msgs.join("<br>")+(ok===3?"<br>All three match. Now write what they mean in the memo.":"")+'</div>';
+  }
+  else if(id==="pcheck"){
+    var m2=model();
+    var h='<div class="card"><b>Model numbers (after cleaning)</b><p class="note">Assumptions: "four" means 4. The 60 beans on W1 Wed is treated as 6 (the owner says beans never pass ten a day). The repeated W2 Monday row is counted once. The blank W2 Thursday indomie is left out, not guessed.</p>';
+    h+='<table><tr><th>Item</th><th>Units</th><th>Money (naira)</th></tr>';
+    ["rice","beans","indomie"].forEach(function(k){ h+='<tr><td>'+k+'</td><td>'+m2.tot[k]+(k==="indomie"?" (plus 1 missing day)":"")+'</td><td>'+fmt(m2.tot[k]*PRICES[k])+'</td></tr>'; });
+    h+='</table><p>Busiest day by total units: <b>'+esc(m2.best)+'</b> ('+m2.bv+' units over two weeks).</p><p class="note">Look at units and money together. They can point to different items.</p></div>';
+    $("#pout").innerHTML=h;
+  } else if(id==="pmodel"){
+    $("#pout").innerHTML='<div class="card"><b>Model memo (compare with yours, do not copy)</b><p><b>Question:</b> Which items should Mama Tunde stock more of, and on which days?</p><p><b>Data and cleaning:</b> Used her 15 notebook rows for two weeks. Converted "four" to 4, treated 60 beans as 6 after the owner said beans never pass ten a day, removed one repeated Monday row, and left the blank indomie value missing.</p><p><b>Pattern:</b> Rice earns the most money (about 118,400 naira from 148 units). Indomie sells a similar number of units but earns far less per unit. Friday is the busiest day in both weeks, then Saturday.</p><p><b>Recommendation:</b> Mama Tunde should buy extra rice and indomie on Thursday so Friday never runs out.</p><p><b>Limits:</b> Only two weeks of data, one value missing, one value changed after a phone call. Confirm the pattern with more weeks before changing orders.</p></div>';
+
+  } else if(id==="pdl"){
+    var txt="Level 0 mini project: Mama Tunde's shop\n\n"+PF.map(function(f){return f[1]+"\n"+(S.proj[f[0]]||"")+"\n";}).join("\n");
+    download("mini-project-memo.txt",new Blob([txt],{type:"text/plain"})); showText("pcopy","Your memo as text",txt);
+  }
+});
+function showText(id,label,text){
+  var box=document.getElementById(id); if(!box) return;
+  box.innerHTML='<div class="card"><b>'+esc(label)+'</b><p class="note">If the download did nothing, copy the text from this box.</p><textarea readonly id="'+id+'_t" style="min-height:160px">'+esc(text)+'</textarea><button class="btn alt" type="button" id="'+id+'_b">Copy text</button><span id="'+id+'_m" class="note"></span></div>';
+  document.getElementById(id+"_b").addEventListener("click",function(){
+    var ta=document.getElementById(id+"_t"), m=document.getElementById(id+"_m");
+    function sel(){ ta.focus(); ta.select(); m.textContent=" Selected. Press copy on your keyboard or menu."; }
+    try{ navigator.clipboard.writeText(text).then(function(){ m.textContent=" Copied."; },sel); }catch(e){ sel(); }
+  });
+}
+function download(name,blob){ var a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=name; document.body.appendChild(a); a.click(); setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},500); }
+
+
+/* ---------- portfolio ---------- */
+function renderPort(){
+  var p=S.port;
+  var def={title:"Mama Tunde's shop: what to stock and when",problem:(S.proj.q||"").slice(0,200),did:(S.proj.d||"").slice(0,400),result:(S.proj.p||"").slice(0,300)+" "+(S.proj.a||"").slice(0,200),tools:"Spreadsheet (practice sheet), pen and paper"};
+  p.ed=p.ed||{}; Object.keys(def).forEach(function(k){ if(!p.ed[k]) p[k]=def[k]; });
+  var h='<p class="note">Fields start filled from your project memo. Edit them. This is a fictional client project for practice, so label it clearly as a practice project.</p>';
+  [["title","Project title"],["problem","The problem"],["did","What I did"],["result","Result and recommendation"],["tools","Tools used"]].forEach(function(f){
+    h+='<label for="pt_'+f[0]+'">'+f[1]+'</label>'+(f[0]==="title"||f[0]==="tools"?'<input type="text" id="pt_'+f[0]+'" data-act="pt" data-k="'+f[0]+'" value="'+esc(p[f[0]])+'">':'<textarea id="pt_'+f[0]+'" data-act="pt" data-k="'+f[0]+'">'+esc(p[f[0]])+'</textarea>');
+  });
+  h+='<button class="btn" id="ptdl">Download portfolio page (.html)</button><button class="btn alt" id="ptcopy">Copy as a post</button><div id="ptmsg"></div>';
+  $("#port").innerHTML=h;
+}
+document.addEventListener("input",function(e){ var t=e.target; if(t.getAttribute&&t.getAttribute("data-act")==="pt"){ var k=t.getAttribute("data-k"); S.port[k]=t.value; S.port.ed=S.port.ed||{}; S.port.ed[k]=true; save(); } });
+document.addEventListener("click",function(e){
+  var id=e.target&&e.target.id, p=S.port;
+  if(id==="ptdl"){
+    var html='<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>'+esc(p.title)+'</title><style>body{font:18px/1.6 system-ui,sans-serif;max-width:680px;margin:0 auto;padding:24px 16px;background:#faf6ee;color:#2b2623}h1{font-size:28px}h2{font-size:18px;color:#c4623a;margin-top:24px}.tag{background:#eae1d1;padding:4px 12px;border-radius:12px;font-size:14px}</style></head><body><p class="tag">Practice project (fictional client)</p><h1>'+esc(p.title)+'</h1><h2>The problem</h2><p>'+esc(p.problem)+'</p><h2>What I did</h2><p>'+esc(p.did)+'</p><h2>Result and recommendation</h2><p>'+esc(p.result)+'</p><h2>Tools</h2><p>'+esc(p.tools)+'</p></body></html>';
+    download("portfolio-level0.html",new Blob([html],{type:"text/html"})); showText("ptmsg","Portfolio page code (save as a .html file)",html);
+  } else if(id==="ptcopy"){
+    var txt=p.title+"\n\nProblem: "+p.problem+"\nWhat I did: "+p.did+"\nResult: "+p.result+"\nTools: "+p.tools+"\n\n(Practice project with a fictional client.) #dataanalysis #learning";
+    var done=function(){ $("#ptmsg").innerHTML='<div class="msg ok">Copied. Paste it into your post.</div>'; };
+    try{ navigator.clipboard.writeText(txt).then(done,function(){ $("#ptmsg").innerHTML='<div class="msg warn">Copy was blocked. Select the text in the boxes above and copy it by hand.</div>'; }); }catch(err){ $("#ptmsg").innerHTML='<div class="msg warn">Copy is not available here.</div>'; }
+  }
+});
+
+
+/* ---------- certificate ---------- */
+function gate(){
+  var pts=qPoints();
+  return [
+    ["Quiz score 80% or more ("+pts+" of "+Q.length+" points)", pts>=Q.length*0.8],
+    ["Sandbox tasks 1, 2 and 3 complete", !!(S.sb.d1&&S.sb.d2&&S.sb.d3)],
+    ["Mini project memo written (all 5 sections)", projFilled()]
+  ];
+}
+function updateGate(){ if($("#cert").classList.contains("on")) renderCert(); }
+function renderCert(){
+  var g=gate(), ok=g.every(function(x){return x[1];});
+  var h='<div class="card"><b>Gate for Level 0</b><ul class="chk">'+g.map(function(x){return '<li class="'+(x[1]?"y":"")+'">'+esc(x[0])+'</li>';}).join("")+'</ul><p class="note">The explain-back answers are self-marked, so they are for you and do not count toward the gate. Be honest with yourself.</p></div>';
+  h+='<label for="cname">Your name as it should appear</label><input type="text" id="cname" value="'+esc(S.name)+'" placeholder="Your full name"><button class="btn" id="cmake"'+(ok?"":" disabled")+'>Make my certificate</button>';
+  if(!ok) h+='<p class="note">The button unlocks when all three gate items are done.</p>';
+  h+='<div id="cwrap"></div>';
+  $("#certbox").innerHTML=h;
+}
+document.addEventListener("input",function(e){ if(e.target&&e.target.id==="cname"){ S.name=e.target.value; save(); } });
+function drawCert(name){
+  var c=document.createElement("canvas"); c.width=1600; c.height=1130; var x=c.getContext("2d");
+  x.fillStyle="#faf6ee"; x.fillRect(0,0,1600,1130);
+  x.strokeStyle="#c4623a"; x.lineWidth=14; x.strokeRect(40,40,1520,1050);
+  x.strokeStyle="#2b2623"; x.lineWidth=3; x.strokeRect(70,70,1460,990);
+  x.fillStyle="#2b2623"; x.textAlign="center";
+  x.font="bold 40px Georgia,serif"; x.fillStyle="#c4623a"; x.fillText("COURSE COMPLETION CERTIFICATE",800,200);
+  x.fillStyle="#2b2623"; x.font="30px Georgia,serif"; x.fillText("This certifies that",800,300);
+  x.font="bold 84px Georgia,serif"; x.fillText(name,800,420,1300);
+  x.font="30px Georgia,serif"; x.fillText("completed",800,500);
+  x.font="bold 54px Georgia,serif"; x.fillText("Data Analysis, Level 0: Foundations",800,590);
+  x.font="28px Georgia,serif"; x.fillText("Data and its types, the four kinds of analysis, the six phases,",800,680); x.fillText("cleaning data, finding patterns, and a client mini project.",800,720);
+  x.fillStyle="#6f655b"; x.font="26px Georgia,serif"; x.fillText("Passed the gate: quiz 80% or more, sandbox tasks, and project memo.",800,820);
+  var d=new Date(); x.fillText("Date: "+d.toISOString().slice(0,10),800,880);
+  x.font="italic 24px Georgia,serif"; x.fillText("This is a course completion certificate from this course tutor. It is not an accredited qualification.",800,990);
+  return c;
+}
+function b64bytes(u){ var s=atob(u.split(",")[1]), a=new Uint8Array(s.length); for(var i=0;i<s.length;i++) a[i]=s.charCodeAt(i); return a; }
+function enc(s){ var a=new Uint8Array(s.length); for(var i=0;i<s.length;i++) a[i]=s.charCodeAt(i)&255; return a; }
+function makePdf(canvas){
+  var jpg=b64bytes(canvas.toDataURL("image/jpeg",0.92)), parts=[], offs=[], len=0;
+  function add(u8){ parts.push(u8); len+=u8.length; }
+  function obj(n,body){ offs[n]=len; add(enc(n+" 0 obj\n")); (Array.isArray(body)?body:[body]).forEach(function(b){ add(typeof b==="string"?enc(b):b); }); add(enc("\nendobj\n")); }
+  add(enc("%PDF-1.4\n"));
+  obj(1,"<< /Type /Catalog /Pages 2 0 R >>");
+  obj(2,"<< /Type /Pages /Kids [3 0 R] /Count 1 >>");
+  obj(3,"<< /Type /Page /Parent 2 0 R /MediaBox [0 0 842 595] /Resources << /XObject << /Im0 4 0 R >> >> /Contents 5 0 R >>");
+  obj(4,["<< /Type /XObject /Subtype /Image /Width 1600 /Height 1130 /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length "+jpg.length+" >>\nstream\n",jpg,"\nendstream"]);
+  var cs="q 842 0 0 595 0 0 cm /Im0 Do Q";
+  obj(5,"<< /Length "+cs.length+" >>\nstream\n"+cs+"\nendstream");
+  var x=len; add(enc("xref\n0 6\n0000000000 65535 f \n")); for(var i=1;i<=5;i++) add(enc(("0000000000"+offs[i]).slice(-10)+" 00000 n \n"));
+  add(enc("trailer\n<< /Size 6 /Root 1 0 R >>\nstartxref\n"+x+"\n%%EOF"));
+  return new Blob(parts,{type:"application/pdf"});
+}
+document.addEventListener("click",function(e){
+  var id=e.target&&e.target.id;
+  if(id==="cmake"){
+    var name=(S.name||"").trim(); if(!name){ $("#cwrap").innerHTML='<div class="msg warn">Type your name first.</div>'; return; }
+    if(!gate().every(function(x){return x[1];})) return;
+    var c=drawCert(name); c.id="cv"; var w=$("#cwrap"); w.innerHTML='<p class="note">If a download button does nothing, press and hold the picture (phone) or right-click it (computer) and save it.</p>';
+    w.appendChild(c);
+    var b=document.createElement("button"); b.className="btn"; b.id="cpng"; b.textContent="Download PNG"; b.onclick=function(){ c.toBlob(function(bl){ download("certificate-level0.png",bl); }); }; w.appendChild(b);
+    var b2=document.createElement("button"); b2.className="btn alt"; b2.id="cpdf"; b2.textContent="Download PDF"; b2.onclick=function(){ try{ download("certificate-level0.pdf",makePdf(c)); }catch(err){ w.insertAdjacentHTML("beforeend",'<div class="msg warn">PDF failed. Use the PNG.</div>'); } }; w.appendChild(b2);
+  }
+});
+
+/* ---------- ask list ---------- */
+function renderAsk(){
+  var h='<div class="card"><b>Park a question</b><p class="note">This page works offline, so it cannot answer new questions. Write yours here so you do not lose it, then bring the list to your tutor chat or class.</p><textarea id="askt" placeholder="Type your question..."></textarea><button class="btn" id="asksave">Save question</button></div>';
+  if(!S.ask.length) h+='<p class="note">No saved questions yet.</p>';
+  else{ h+='<div class="card"><b>Your questions ('+S.ask.length+')</b>'; S.ask.forEach(function(q,i){ h+='<p style="margin:8px 0">'+(i+1)+'. '+esc(q)+' <button class="btn alt" style="min-height:36px;margin:0 0 0 6px" data-act="askdel" data-i="'+i+'">Remove</button></p>'; }); h+='</div><button class="btn alt" id="askcopy">Copy all questions</button><span id="askmsg" class="note"></span><div id="askmsg2"></div>'; }
+  $("#askbody").innerHTML=h;
+}
+document.addEventListener("click",function(e){
+  var id=e.target&&e.target.id;
+  if(id==="asksave"){ var t=$("#askt").value.trim(); if(t.length<3) return; S.ask.push(t); save(); renderAsk(); }
+  else if(id==="askcopy"){ var txt=S.ask.map(function(q,i){return (i+1)+". "+q;}).join("\n"); try{ navigator.clipboard.writeText(txt).then(function(){$("#askmsg").textContent=" Copied.";},function(){showText("askmsg2","Your questions",txt);}); }catch(err){ showText("askmsg2","Your questions",txt); } }
+  var b=e.target.closest("[data-act=askdel]"); if(b){ S.ask.splice(+b.getAttribute("data-i"),1); save(); renderAsk(); }
+});
+
+/* ---------- home ---------- */
+function nextStep(){
+  var g=gate();
+  if(!S.name&&!S.skipName) return ["Tell me your name","home"];
+  if(qDone()<Q.length) return ["Continue the quiz ("+qDone()+" of "+Q.length+" done)","quiz"];
+  if(dueList().length) return ["Review "+dueList().length+" missed question"+(dueList().length>1?"s":""),"review"];
+  if(!(S.sb.d1&&S.sb.d2&&S.sb.d3)) return ["Do the sandbox tasks","sandbox"];
+  if(!projFilled()) return ["Write your project memo","project"];
+  if(g.every(function(x){return x[1];})) return ["Make your certificate","cert"];
+  return ["Retake the quiz (you need 80%)","quiz"];
+}
+function renderHome(){
+  var st=streak(), g=gate(), n=nextStep(), nm=S.name?esc(S.name.split(" ")[0]):"";
+  var h='';
+  if(!S.name&&!S.skipName){
+    h+='<div class="card"><b>Welcome. What should I call you?</b><p class="note">Your name appears on your certificate. It stays on this phone. You can skip this.</p><input type="text" id="wname" placeholder="Your name" autocomplete="given-name"><button class="btn" id="wsave">Save my name</button><button class="btn alt" id="wskip">Skip for now</button></div>';
+  } else h+='<h2>'+(nm?'Hello, '+nm+'.':'Welcome back.')+'</h2>';
+  var gap=0; if(S.days.length){ var last=Math.max.apply(null,S.days); gap=dayNum()-last; }
+  if(gap>=2) h+='<div class="msg ok">Welcome back. No guilt. Missing days is normal. Do one small thing today: your next step is below.</div>';
+  h+='<div class="card"><b>Your next step</b><p style="margin:6px 0"><button class="btn" data-act="goto" data-t="'+n[1]+'">'+esc(n[0])+'</button></p><p class="note" style="margin:4px 0">'+(st>0?"Streak: "+st+" day"+(st>1?"s":"")+" in a row. ":"Start a streak today. ")+'A streak is a bonus. Slow and steady is fine.</p></div>';
+  var pts=qPoints(), done=[S.sb.d1,S.sb.d2,S.sb.d3].filter(Boolean).length;
+  h+='<div class="card"><b>Your progress</b>';
+  [["Quiz",Math.round(pts/Q.length*100)],["Sandbox tasks",Math.round(done/3*100)],["Project memo",Math.round(PF.filter(function(f){return (S.proj[f[0]]||"").trim().length>=30;}).length/5*100)]].forEach(function(r){ h+='<p style="margin:8px 0 2px">'+r[0]+': '+r[1]+'%</p><div class="bar"><i style="width:'+r[1]+'%"></i></div>'; });
+  h+='<p class="note">Certificate gate: '+g.filter(function(x){return x[1];}).length+' of 3 done.</p></div>';
+  h+='<div class="card"><b>How to use this hub</b><ol style="padding-left:20px;margin:6px 0"><li>Watch the lesson video or read the notes.</li><li>Do the quiz. Missed ones come back in Review.</li><li>Do the sandbox tasks in the spreadsheet.</li><li>Write the Mama Tunde project memo.</li><li>Make your certificate.</li></ol><p class="note">Stuck? Open Ask and park your question.</p></div>';
+  $("#homebody").innerHTML=h;
+}
+document.addEventListener("click",function(e){
+  var id=e.target&&e.target.id;
+  if(id==="wsave"){ var t=$("#wname").value.trim(); if(t){ S.name=t; save(); applySettings(); renderHome(); } }
+  else if(id==="wskip"){ S.skipName=true; save(); renderHome(); }
+  var b=e.target.closest("[data-act=goto]"); if(b) showTab(b.getAttribute("data-t"));
+});
+
+/* ---------- settings ---------- */
+function renderSettings(){
+  var h='<div class="card"><b>Your name</b><input type="text" id="sname" value="'+esc(S.name)+'" placeholder="Your name"></div>';
+  h+='<div class="card"><b>Look</b><label for="sth">Colour theme</label><select id="sth" data-act="set" data-k="theme">'+[["auto","Automatic"],["light","Light"],["dark","Dark"]].map(function(o){return '<option value="'+o[0]+'"'+(S.set.theme===o[0]?" selected":"")+'>'+o[1]+'</option>';}).join("")+'</select><label for="ssz">Text size</label><select id="ssz" data-act="set" data-k="size">'+[["normal","Normal"],["large","Large"]].map(function(o){return '<option value="'+o[0]+'"'+(S.set.size===o[0]?" selected":"")+'>'+o[1]+'</option>';}).join("")+'</select></div>';
+  h+='<div class="card"><b>Save or move your progress</b><p class="note">Progress is stored in this browser. To move to another phone, export it, then import it there.</p><button class="btn" id="sexp">Export my progress</button><div id="sexpbox"></div><label for="simp">Import: paste your saved progress here</label><textarea id="simp" placeholder="Paste here..."></textarea><button class="btn alt" id="simpgo">Import</button><div id="simpmsg"></div></div>';
+  h+='<div class="card"><b>Start again</b><p class="note">This erases quiz answers, sheets, memo and name from this browser.</p><button class="btn alt" id="sreset">Erase everything</button><div id="srmsg"></div></div>';
+  $("#setbody").innerHTML=h;
+}
+document.addEventListener("input",function(e){ if(e.target&&e.target.id==="sname"){ S.name=e.target.value; save(); } });
+document.addEventListener("change",function(e){ var t=e.target; if(t.getAttribute&&t.getAttribute("data-act")==="set"){ S.set[t.getAttribute("data-k")]=t.value; save(); applySettings(); } });
+var resetArm=false;
+document.addEventListener("click",function(e){
+  var id=e.target&&e.target.id;
+  if(id==="sexp"){ var txt=JSON.stringify(S); download("level0-progress.json",new Blob([txt],{type:"application/json"})); showText("sexpbox","Your progress (copy this text if the file did not download)",txt); }
+  else if(id==="simpgo"){
+    try{ var o=JSON.parse($("#simp").value); if(!o||typeof o!=="object"||!o.quiz) throw 1; S=o; save(); location.reload(); }
+    catch(err){ $("#simpmsg").innerHTML='<div class="msg warn">That did not look like saved progress. Paste the whole text.</div>'; }
+  }
+  else if(id==="sreset"){
+    if(!resetArm){ resetArm=true; $("#srmsg").innerHTML='<div class="msg warn">Tap Erase everything once more to confirm.</div>'; }
+    else { try{ localStorage.removeItem(KEY); }catch(err){} S={}; location.reload(); }
+  }
+});
+
+/*@ENDINIT*/
+applySettings(); showTab("home");
+window.__hub={S:function(){return S;},Q:Q,gate:gate,qPoints:qPoints,model:model,sheet:function(){return sheet;},setShift:function(n){SHIFT=n;},dueList:dueList,streak:streak,t1checks:t1checks,t1rows:t1rows};
+})();
+
+</script>
+</body>
+</html>
